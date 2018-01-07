@@ -1,0 +1,4884 @@
+﻿; <COMPILER: v1.1.26.01>
+#NoEnv
+SendMode Input
+SetWorkingDir %A_ScriptDir%
+global ERROR_OK                     := 0
+global ERROR_PROCESS_NOT_FOUND      := 1
+global ERROR_OPEN_PROCESS           := 2
+global ERROR_INVALID_HANDLE         := 3
+global ERROR_MODULE_NOT_FOUND       := 4
+global ERROR_ENUM_PROCESS_MODULES   := 5
+global ERROR_ZONE_NOT_FOUND         := 6
+global ERROR_CITY_NOT_FOUND         := 7
+global ERROR_READ_MEMORY            := 8
+global ERROR_WRITE_MEMORY           := 9
+global ERROR_ALLOC_MEMORY           := 10
+global ERROR_FREE_MEMORY            := 11
+global ERROR_WAIT_FOR_OBJECT        := 12
+global ERROR_CREATE_THREAD          := 13
+global ADDR_ZONECODE                := 0xA49AD4
+global ADDR_POSITION_X              := 0xB6F2E4
+global ADDR_POSITION_Y              := 0xB6F2E8
+global ADDR_POSITION_Z              := 0xB6F2EC
+global ADDR_CPED_PTR                := 0xB6F5F0
+global ADDR_CPED_HPOFF              := 0x540
+global ADDR_CPED_ARMOROFF           := 0x548
+global ADDR_CPED_MONEY              := 0x0B7CE54
+global ADDR_CPED_INTID              := 0xA4ACE8
+global ADDR_CPED_SKINIDOFF          := 0x22
+global ADDR_VEHICLE_PTR             := 0xBA18FC
+global ADDR_VEHICLE_HPOFF           := 0x4C0
+global ADDR_VEHICLE_DOORSTATE       := 0x4F8
+global ADDR_VEHICLE_ENGINESTATE     := 0x428
+global ADDR_VEHICLE_LIGHTSTATE      := 0x584
+global ADDR_VEHICLE_MODEL           := 0x22
+global ADDR_VEHICLE_TYPE            := 0x590
+global ADDR_VEHICLE_DRIVER          := 0x460
+global ADDR_VEHICLE_X               := 0x44
+global ADDR_VEHICLE_Y               := 0x48
+global ADDR_VEHICLE_Z               := 0x4C
+global oAirplaneModels := [417, 425, 447, 460, 469, 476, 487, 488, 497, 511, 512, 513, 519, 520, 548, 553, 563, 577, 592, 593]
+global oBikeModels := [481,509,510]
+global ovehicleNames := ["Landstalker","Bravura","Buffalo","Linerunner","Perrenial","Sentinel","Dumper","Firetruck","Trashmaster","Stretch","Manana","Infernus","Voodoo","Pony","Mule","Cheetah","Ambulance","Leviathan","Moonbeam","Esperanto","Taxi","Washington","Bobcat","Whoopee","BFInjection","Hunter","Premier","Enforcer","Securicar","Banshee","Predator","Bus","Rhino","Barracks","Hotknife","Trailer","Previon","Coach","Cabbie","Stallion","Rumpo","RCBandit","Romero","Packer","Monster","Admiral","Squalo","Seasparrow","Pizzaboy","Tram","Trailer","Turismo","Speeder","Reefer","Tropic","Flatbed","Yankee","Caddy","Solair","Berkley'sRCVan","Skimmer","PCJ-600","Faggio","Freeway","RCBaron","RCRaider","Glendale","Oceanic","Sanchez","Sparrow","Patriot","Quad","Coastguard","Dinghy","Hermes","Sabre","Rustler","ZR-350","Walton","Regina","Comet","BMX","Burrito","Camper","Marquis","Baggage","Dozer","Maverick","NewsChopper","Rancher","FBIRancher","Virgo","Greenwood","Jetmax","Hotring","Sandking","BlistaCompact","PoliceMaverick","Boxvillde","Benson","Mesa","RCGoblin","HotringRacerA","HotringRacerB","BloodringBanger","Rancher","SuperGT","Elegant","Journey","Bike","MountainBike","Beagle","Cropduster","Stunt","Tanker","Roadtrain","Nebula","Majestic","Buccaneer","Shamal","hydra","FCR-900","NRG-500","HPV1000","CementTruck","TowTruck","Fortune","Cadrona","FBITruck","Willard","Forklift","Tractor","Combine","Feltzer","Remington","Slamvan","Blade","Freight","Streak","Vortex","Vincent","Bullet","Clover","Sadler","Firetruck","Hustler","Intruder","Primo","Cargobob","Tampa","Sunrise","Merit","Utility","Nevada","Yosemite","Windsor","Monster","Monster","Uranus","Jester","Sultan","Stratum","Elegy","Raindance","RCTiger","Flash","Tahoma","Savanna","Bandito","FreightFlat","StreakCarriage","Kart","Mower","Dune","Sweeper","Broadway","Tornado","AT-400","DFT-30","Huntley","Stafford","BF-400","NewsVan","Tug","Trailer","Emperor","Wayfarer","Euros","Hotdog","Club","FreightBox","Trailer","Andromada","Dodo","RCCam","Launch","PoliceCar","PoliceCar","PoliceCar","PoliceRanger","Picador","S.W.A.T","Alpha","Phoenix","GlendaleShit","SadlerShit","Luggage","Luggage","Stairs","Boxville","Tiller","UtilityTrailer"]
+global oweaponNames := ["Fist","Brass Knuckles","Golf Club","Nightstick","Knife","Baseball Bat","Shovel","Pool Cue","Katana","Chainsaw","Purple Dildo","Dildo","Vibrator","Silver Vibrator","Flowers","Cane","Grenade","Tear Gas","Molotov Cocktail", "", "", "", "9mm","Silenced 9mm","Desert Eagle","Shotgun","Sawnoff Shotgun","Combat Shotgun","Micro SMG/Uzi","MP5","AK-47","M4","Tec-9","Country Rifle","Sniper Rifle","RPG","HS Rocket","Flamethrower","Minigun","Satchel Charge","Detonator","Spraycan","Fire Extinguisher","Camera","Night Vis Goggles","Thermal Goggles","Parachute"]
+global oradiostationNames := ["Playback FM", "K Rose", "K-DST", "Bounce FM", "SF-UR", "Radio Los Santos", "Radio X", "CSR 103.9", "K-JAH West", "Master Sounds 98.3", "WCTR Talk Radio", "User Track Player", "Radio Off"]
+global oweatherNames := ["EXTRASUNNY_LA", "SUNNY_LA", "EXTRASUNNY_SMOG_LA", "SUNNY_SMOG_LA", "CLOUDY_LA", "SUNNY_SF", "EXTRASUNNY_SF", "CLOUDY_SF", "RAINY_SF", "FOGGY_SF", "SUNNY_VEGAS", "EXTRASUNNY_VEGAS", "CLOUDY_VEGAS", "EXTRASUNNY_COUNTRYSIDE", "SUNNY_COUNTRYSIDE", "CLOUDY_COUNTRYSIDE", "RAINY_COUNTRYSIDE", "EXTRASUNNY_DESERT", "SUNNY_DESERT", "SANDSTORM_DESERT", "UNDERWATER", "EXTRACOLOURS_1", "EXTRACOLOURS_2"]
+global ADDR_SAMP_INCHAT_PTR             := 0x21a10c
+global ADDR_SAMP_INCHAT_PTR_OFF         := 0x55
+global ADDR_SAMP_USERNAME               := 0x219A6F
+global FUNC_SAMP_SENDCMD                := 0x65c60
+global FUNC_SAMP_SENDSAY                := 0x57f0
+global FUNC_SAMP_ADDTOCHATWND           := 0x64520
+global ADDR_SAMP_CHATMSG_PTR            := 0x21a0e4
+global FUNC_SAMP_SHOWGAMETEXT           := 0x9c2c0
+global FUNC_SAMP_PLAYAUDIOSTR           := 0x62da0
+global FUNC_SAMP_STOPAUDIOSTR           := 0x629a0
+global DIALOG_STYLE_MSGBOX			:= 0
+global DIALOG_STYLE_INPUT 			:= 1
+global DIALOG_STYLE_LIST			:= 2
+global DIALOG_STYLE_PASSWORD		:= 3
+global DIALOG_STYLE_TABLIST			:= 4
+global DIALOG_STYLE_TABLIST_HEADERS	:= 5
+global SAMP_DIALOG_STRUCT_PTR					:= 0x21A0B8
+global SAMP_DIALOG_PTR1_OFFSET				:= 0x1C
+global SAMP_DIALOG_LINES_OFFSET 			:= 0x44C
+global SAMP_DIALOG_INDEX_OFFSET				:= 0x443
+global SAMP_DIALOG_BUTTON_HOVERING_OFFSET	:= 0x465
+global SAMP_DIALOG_BUTTON_CLICKED_OFFSET	:= 0x466
+global SAMP_DIALOG_PTR2_OFFSET 				:= 0x20
+global SAMP_DIALOG_LINECOUNT_OFFSET			:= 0x150
+global SAMP_DIALOG_OPEN_OFFSET				:= 0x28
+global SAMP_DIALOG_STYLE_OFFSET				:= 0x2C
+global SAMP_DIALOG_ID_OFFSET				:= 0x30
+global SAMP_DIALOG_TEXT_PTR_OFFSET			:= 0x34
+global SAMP_DIALOG_CAPTION_OFFSET			:= 0x40
+global FUNC_SAMP_SHOWDIALOG				 	:= 0x6B9C0
+global FUNC_SAMP_CLOSEDIALOG				:= 0x6C040
+global FUNC_UPDATESCOREBOARD                := 0x8A10
+global SAMP_INFO_OFFSET                     := 0x21A0F8
+global ADDR_SAMP_CRASHREPORT 				:= 0x5CF2C
+global SAMP_PPOOLS_OFFSET                   := 0x3CD
+global SAMP_PPOOL_PLAYER_OFFSET             := 0x18
+global SAMP_SLOCALPLAYERID_OFFSET           := 0x4
+global SAMP_ISTRLEN_LOCALPLAYERNAME_OFFSET  := 0x1A
+global SAMP_SZLOCALPLAYERNAME_OFFSET        := 0xA
+global SAMP_PSZLOCALPLAYERNAME_OFFSET       := 0xA
+global SAMP_PREMOTEPLAYER_OFFSET            := 0x2E
+global SAMP_ISTRLENNAME___OFFSET            := 0x1C
+global SAMP_SZPLAYERNAME_OFFSET             := 0xC
+global SAMP_PSZPLAYERNAME_OFFSET            := 0xC
+global SAMP_ILOCALPLAYERPING_OFFSET         := 0x26
+global SAMP_ILOCALPLAYERSCORE_OFFSET        := 0x2A
+global SAMP_IPING_OFFSET                    := 0x28
+global SAMP_ISCORE_OFFSET                   := 0x24
+global SAMP_ISNPC_OFFSET                    := 0x4
+global SAMP_PLAYER_MAX                      := 1004
+global CheckpointCheck 						:= 0xC7DEEA
+global rmaddrs 								:= [0xC7DEC8, 0xC7DECC, 0xC7DED0]
+global SIZE_SAMP_CHATMSG := 0xFC
+global hGTA := 0x0
+global dwGTAPID := 0x0
+global dwSAMP := 0x0
+global pMemory := 0x0
+global pParam1 := 0x0
+global pParam2 := 0x0
+global pParam3 := 0x0
+global pParam4                         := 0x0
+global pParam5                         := 0x0
+global pInjectFunc := 0x0
+global nZone := 1
+global nCity := 1
+global bInitZaC := 0
+global iRefreshScoreboard := 0
+global oScoreboardData := ""
+global iRefreshHandles := 0
+global iUpdateTick := 2500
+IsSAMPAvailable() {
+    if(!checkHandles())
+    return false
+    dwChatInfo := readDWORD(hGTA, dwSAMP + ADDR_SAMP_CHATMSG_PTR)
+    if(dwChatInfo == 0 || dwChatInfo == "ERROR")
+    {
+        return false
+    }
+    else
+    {
+        return true
+    }
+}
+isInChat() {
+    if(!checkHandles())
+    return -1
+    dwPtr := dwSAMP + ADDR_SAMP_INCHAT_PTR
+    dwAddress := readDWORD(hGTA, dwPtr) + ADDR_SAMP_INCHAT_PTR_OFF
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    dwInChat := readDWORD(hGTA, dwAddress)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    if(dwInChat > 0) {
+        return true
+    } else {
+        return false
+    }
+}
+getUsername() {
+    if(!checkHandles())
+    return ""
+    dwAddress := dwSAMP + ADDR_SAMP_USERNAME
+    sUsername := readString(hGTA, dwAddress, 25)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    ErrorLevel := ERROR_OK
+    return sUsername
+}
+getId() {
+    s:=getUsername()
+    return getPlayerIdByName(s)
+}
+SendChat(wText) {
+    wText := "" wText
+    if(!checkHandles())
+    return false
+    IfWinNotActive, GTA:SA:MP
+    return false
+    dwFunc:=0
+    if(SubStr(wText, 1, 1) == "/") {
+        dwFunc := dwSAMP + FUNC_SAMP_SENDCMD
+    } else {
+        dwFunc := dwSAMP + FUNC_SAMP_SENDSAY
+    }
+    callWithParams(hGTA, dwFunc, [["s", wText]], false)
+    ErrorLevel := ERROR_OK
+    return true
+}
+addChatMessage(wText) {
+    wText := "" wText
+    if(!checkHandles())
+    return false
+    dwFunc := dwSAMP + FUNC_SAMP_ADDTOCHATWND
+    dwChatInfo := readDWORD(hGTA, dwSAMP + ADDR_SAMP_CHATMSG_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    callWithParams(hGTA, dwFunc, [["p", dwChatInfo], ["s", wText]], true)
+    ErrorLevel := ERROR_OK
+    return true
+}
+addChatMessageEx(Color, wText) {
+    wText := "" wText
+    if(!checkHandles())
+    return false
+    VarSetCapacity(data2, 4, 0)
+    NumPut(Color,data2,0,"Int")
+    Addrr := readDWORD(hGTA, dwSAMP+ADDR_SAMP_CHATMSG_PTR)
+    VarSetCapacity(data1, 4, 0)
+    NumPut(readDWORD(hGTA, Addrr + 0x12A), data1,0,"Int")
+    WriteRaw(hGTA, Addrr + 0x12A, &data2, 4)
+    dwFunc := dwSAMP + FUNC_SAMP_ADDTOCHATWND
+    dwChatInfo := readDWORD(hGTA, dwSAMP + ADDR_SAMP_CHATMSG_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    callWithParams(hGTA, dwFunc, [["p", dwChatInfo], ["s", wText]], true)
+    WriteRaw(hGTA, Addrr + 0x12A, &data1, 4)
+    ErrorLevel := ERROR_OK
+    return true
+}
+showGameText(wText, dwTime, dwSize) {
+    wText := "" wText
+    dwTime += 0
+    dwTime := Floor(dwTime)
+    dwSize += 0
+    dwSize := Floor(dwSize)
+    if(!checkHandles())
+    return false
+    dwFunc := dwSAMP + FUNC_SAMP_SHOWGAMETEXT
+    callWithParams(hGTA, dwFunc, [["s", wText], ["i", dwTime], ["i", dwSize]], false)
+    ErrorLevel := ERROR_OK
+    return true
+}
+playAudioStream(wUrl) {
+    wUrl := "" wUrl
+    if(!checkHandles())
+    return false
+    dwFunc := dwSAMP + FUNC_SAMP_PLAYAUDIOSTR
+    patchRadio()
+    callWithParams(hGTA, dwFunc, [["s", wUrl], ["i", 0], ["i", 0], ["i", 0], ["i", 0], ["i", 0]], false)
+    unPatchRadio()
+    ErrorLevel := ERROR_OK
+    return true
+}
+stopAudioStream() {
+    if(!checkHandles())
+    return false
+    dwFunc := dwSAMP + FUNC_SAMP_STOPAUDIOSTR
+    patchRadio()
+    callWithParams(hGTA, dwFunc, [["i", 1]], false)
+    unPatchRadio()
+    ErrorLevel := ERROR_OK
+    return true
+}
+patchRadio()
+{
+    if(!checkHandles())
+    return false
+    VarSetCapacity(nop, 4, 0)
+    NumPut(0x90909090,nop,0,"UInt")
+    dwFunc := dwSAMP + FUNC_SAMP_PLAYAUDIOSTR
+    writeRaw(hGTA, dwFunc, &nop, 4)
+    writeRaw(hGTA, dwFunc+4, &nop, 1)
+    dwFunc := dwSAMP + FUNC_SAMP_STOPAUDIOSTR
+    writeRaw(hGTA, dwFunc, &nop, 4)
+    writeRaw(hGTA, dwFunc+4, &nop, 1)
+    return true
+}
+unPatchRadio()
+{
+    if(!checkHandles())
+    return false
+    VarSetCapacity(old, 4, 0)
+    dwFunc := dwSAMP + FUNC_SAMP_PLAYAUDIOSTR
+    NumPut(0x74003980,old,0,"UInt")
+    writeRaw(hGTA, dwFunc, &old, 4)
+    NumPut(0x39,old,0,"UChar")
+    writeRaw(hGTA, dwFunc+4, &old, 1)
+    dwFunc := dwSAMP + FUNC_SAMP_STOPAUDIOSTR
+    NumPut(0x74003980,old,0,"UInt")
+    writeRaw(hGTA, dwFunc, &old, 4)
+    NumPut(0x09,old,0,"UChar")
+    writeRaw(hGTA, dwFunc+4, &old, 1)
+    return true
+}
+blockChatInput() {
+    if(!checkHandles())
+    return false
+    VarSetCapacity(nop, 2, 0)
+    dwFunc := dwSAMP + FUNC_SAMP_SENDSAY
+    NumPut(0x04C2,nop,0,"Short")
+    writeRaw(hGTA, dwFunc, &nop, 2)
+    dwFunc := dwSAMP + FUNC_SAMP_SENDCMD
+    writeRaw(hGTA, dwFunc, &nop, 2)
+    return true
+}
+unBlockChatInput() {
+    if(!checkHandles())
+    return false
+    VarSetCapacity(nop, 2, 0)
+    dwFunc := dwSAMP + FUNC_SAMP_SENDSAY
+    NumPut(0xA164,nop,0,"Short")
+    writeRaw(hGTA, dwFunc, &nop, 2)
+    dwFunc := dwSAMP + FUNC_SAMP_SENDCMD
+    writeRaw(hGTA, dwFunc, &nop, 2)
+    return true
+}
+getServerName() {
+    if(!checkHandles())
+    return -1
+    dwAdress := readMem(hGTA, dwSAMP + 0x21A0F8, 4, "int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    if(!dwAdress)
+    return -1
+    ServerName := readString(hGTA, dwAdress + 0x121, 200)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return ServerName
+}
+getServerIP() {
+    if(!checkHandles())
+    return -1
+    dwAdress := readMem(hGTA, dwSAMP + 0x21A0F8, 4, "int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    if(!dwAdress)
+    return -1
+    ServerIP := readString(hGTA, dwAdress + 0x20, 100)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return ServerIP
+}
+getServerPort() {
+    if(!checkHandles())
+    return -1
+    dwAdress := readMem(hGTA, dwSAMP + 0x21A0F8, 4, "int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    if(!dwAdress)
+    return -1
+    ServerPort := readMem(hGTA, dwAdress + 0x225, 4, "int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return ServerPort
+}
+getWeatherID() {
+    if(!checkHandles())
+    return -1
+    dwGTA := getModuleBaseAddress("gta_sa.exe", hGTA)
+    WeatherID := readMem(hGTA, dwGTA + 0xC81320, 2, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return WeatherID
+}
+getWeatherName() {
+    if(isPlayerInAnyVehicle() == 0)
+    return -1
+    if(id >= 0 && id < 23)
+    {
+        return oweatherNames[id-1]
+    }
+    return ""
+}
+getTargetPed() {
+    if(!checkHandles())
+    return 0
+    dwAddress := readDWORD(hGTA, 0xB6F3B8)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    if(!dwAddress)
+    return 0
+    dwAddress := readDWORD(hGTA, dwAddress+0x79C)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return dwAddress
+}
+calcScreenCoors(fX,fY,fZ)
+{
+    if(!checkHandles())
+    return false
+    dwM := 0xB6FA2C
+    m_11 := readFloat(hGTA, dwM + 0*4)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    m_12 := readFloat(hGTA, dwM + 1*4)
+    m_13 := readFloat(hGTA, dwM + 2*4)
+    m_21 := readFloat(hGTA, dwM + 4*4)
+    m_22 := readFloat(hGTA, dwM + 5*4)
+    m_23 := readFloat(hGTA, dwM + 6*4)
+    m_31 := readFloat(hGTA, dwM + 8*4)
+    m_32 := readFloat(hGTA, dwM + 9*4)
+    m_33 := readFloat(hGTA, dwM + 10*4)
+    m_41 := readFloat(hGTA, dwM + 12*4)
+    m_42 := readFloat(hGTA, dwM + 13*4)
+    m_43 := readFloat(hGTA, dwM + 14*4)
+    dwLenX := readDWORD(hGTA, 0xC17044)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    dwLenY := readDWORD(hGTA, 0xC17048)
+    frX := fZ * m_31 + fY * m_21 + fX * m_11 + m_41
+    frY := fZ * m_32 + fY * m_22 + fX * m_12 + m_42
+    frZ := fZ * m_33 + fY * m_23 + fX * m_13 + m_43
+    fRecip := 1.0/frZ
+    frX *= fRecip * dwLenX
+    frY *= fRecip * dwLenY
+    if(frX<=dwLenX && frY<=dwLenY && frZ>1)
+    return [frX,frY,frZ]
+}
+getPedById(dwId) {
+    dwId += 0
+    dwId := Floor(dwId)
+    if(dwId < 0 || dwId >= SAMP_PLAYER_MAX)
+    return 0
+    if(iRefreshScoreboard+iUpdateTick > A_TickCount)
+    {
+        if(oScoreboardData[dwId])
+        {
+            if(oScoreboardData[dwId].HasKey("PED"))
+            return oScoreboardData[dwId].PED
+        }
+        return 0
+    }
+    if(!updateOScoreboardData())
+    return 0
+    if(oScoreboardData[dwId])
+    {
+        if(oScoreboardData[dwId].HasKey("PED"))
+        return oScoreboardData[dwId].PED
+    }
+    return 0
+}
+getIdByPed(dwPed) {
+    dwPed += 0
+    dwPed := Floor(dwPed)
+    if(!dwPed)
+    return -1
+    if(iRefreshScoreboard+iUpdateTick > A_TickCount)
+    {
+        For i, o in oScoreboardData
+        {
+            if(o.HasKey("PED"))
+            {
+                if(o.PED==dwPed)
+                return i
+            }
+        }
+        return -1
+    }
+    if(!updateOScoreboardData())
+    return -1
+    For i, o in oScoreboardData
+    {
+        if(o.HasKey("PED"))
+        {
+            if(o.PED==dwPed)
+            return i
+        }
+    }
+    return -1
+}
+getStreamedInPlayersInfo() {
+    r:=[]
+    if(iRefreshScoreboard+iUpdateTick > A_TickCount)
+    {
+        For i, o in oScoreboardData
+        {
+            if(o.HasKey("PED"))
+            {
+                p := getPedCoordinates(o.PED)
+                if(p)
+                {
+                    o.POS := p
+                    r[i] := o
+                }
+            }
+        }
+        return r
+    }
+    if(!updateOScoreboardData())
+    return ""
+    For i, o in oScoreboardData
+    {
+        if(o.HasKey("PED"))
+        {
+            p := getPedCoordinates(o.PED)
+            if(p)
+            {
+                o.POS := p
+                r[i] := o
+            }
+        }
+    }
+    return r
+}
+callFuncForAllStreamedInPlayers(cfunc,dist=0x7fffffff) {
+    cfunc := "" cfunc
+    dist += 0
+    if(!IsFunc(cfunc))
+    return false
+    p := getStreamedInPlayersInfo()
+    if(!p)
+    return false
+    if(dist<0x7fffffff)
+    {
+        lpos := getCoordinates()
+        if(!lpos)
+        return false
+        For i, o in p
+        {
+            if(dist>getDist(lpos,o.POS))
+            %cfunc%(o)
+        }
+    }
+    else
+    {
+        For i, o in p
+        %cfunc%(o)
+    }
+    return true
+}
+getDist(pos1,pos2) {
+    if(!pos1 || !pos2)
+    return 0
+    return Sqrt((pos1[1]-pos2[1])*(pos1[1]-pos2[1])+(pos1[2]-pos2[2])*(pos1[2]-pos2[2])+(pos1[3]-pos2[3])*(pos1[3]-pos2[3]))
+}
+getClosestPlayerPed() {
+    dist := 0x7fffffff
+    p := getStreamedInPlayersInfo()
+    if(!p)
+    return -1
+    lpos := getCoordinates()
+    if(!lpos)
+    return -1
+    id := -1
+    For i, o in p
+    {
+        t:=getDist(lpos,o.POS)
+        if(t<dist)
+        {
+            dist := t
+            id := i
+        }
+    }
+    PED := getPedById(id)
+    return PED
+}
+getClosestPlayerId() {
+    dist := 0x7fffffff
+    p := getStreamedInPlayersInfo()
+    if(!p)
+    return -1
+    lpos := getCoordinates()
+    if(!lpos)
+    return -1
+    id := -1
+    For i, o in p
+    {
+        t:=getDist(lpos,o.POS)
+        if(t<dist)
+        {
+            dist := t
+            id := i
+        }
+    }
+    return id
+}
+CountOnlinePlayers() {
+    if(!checkHandles())
+    return -1
+    dwOnline := readDWORD(hGTA, dwSAMP + 0x21A0B4)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    dwAddr := dwOnline + 0x4
+    OnlinePlayers := readDWORD(hGTA, dwAddr)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return OnlinePlayers
+}
+getPedCoordinates(dwPED) {
+    dwPED += 0
+    dwPED := Floor(dwPED)
+    if(!dwPED)
+    return ""
+    if(!checkHandles())
+    return ""
+    dwAddress := readDWORD(hGTA, dwPED + 0x14)
+    if(ErrorLevel || dwAddress==0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    fX := readFloat(hGTA, dwAddress + 0x30)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    fY := readFloat(hGTA, dwAddress + 0x34)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    fZ := readFloat(hGTA, dwAddress + 0x38)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    ErrorLevel := ERROR_OK
+    return [fX, fY, fZ]
+}
+getTargetPos(dwId) {
+    dwId += 0
+    dwId := Floor(dwId)
+    if(dwId < 0 || dwId >= SAMP_PLAYER_MAX)
+    return ""
+    if(iRefreshScoreboard+iUpdateTick > A_TickCount)
+    {
+        if(oScoreboardData[dwId])
+        {
+            if(oScoreboardData[dwId].HasKey("PED"))
+            return getPedCoordinates(oScoreboardData[dwId].PED)
+            if(oScoreboardData[dwId].HasKey("MPOS"))
+            return oScoreboardData[dwId].MPOS
+        }
+        return ""
+    }
+    if(!updateOScoreboardData())
+    return ""
+    if(oScoreboardData[dwId])
+    {
+        if(oScoreboardData[dwId].HasKey("PED"))
+        return getPedCoordinates(oScoreboardData[dwId].PED)
+        if(oScoreboardData[dwId].HasKey("MPOS"))
+        return oScoreboardData[dwId].MPOS
+    }
+    return ""
+}
+getTargetPlayerSkinIdByPed(dwPED) {
+    if(!checkHandles())
+    return -1
+    dwAddr := dwPED + ADDR_CPED_SKINIDOFF
+    SkinID := readMem(hGTA, dwAddr, 2, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return SkinID
+}
+getTargetPlayerSkinIdById(dwId) {
+    if(!checkHandles())
+    return -1
+    dwPED := getPedById(dwId)
+    dwAddr := dwPED + ADDR_CPED_SKINIDOFF
+    SkinID := readMem(hGTA, dwAddr, 2, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return SkinID
+}
+getVehiclePointerByPed(dwPED) {
+    dwPED += 0
+    dwPED := Floor(dwPED)
+    if(!dwPED)
+    return 0
+    if(!checkHandles())
+    return 0
+    dwAddress := readDWORD(hGTA, dwPED + 0x58C)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return dwAddress
+}
+getVehiclePointerById(dwId) {
+    if(!dwId)
+    return 0
+    if(!checkHandles())
+    return 0
+    dwPed_By_Id := getPedById(dwId)
+    dwAddress := readDWORD(hGTA, dwPed_By_Id + 0x58C)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return dwAddress
+}
+isTargetInAnyVehicleByPed(dwPED)
+{
+    if(!checkHandles())
+    return -1
+    dwVehiclePointer := getVehiclePointerByPed(dwPedPointer)
+    if(dwVehiclePointer > 0)
+    {
+        return 1
+    }
+    else if(dwVehiclePointer <= 0)
+    {
+        return 0
+    }
+    else
+    {
+        return -1
+    }
+}
+isTargetInAnyVehiclebyId(dwId)
+{
+    if(!checkHandles())
+    return -1
+    dwPedPointer := getPedById(dwId)
+    dwVehiclePointer := getVehiclePointerByPed(dwPedPointer)
+    if(dwVehiclePointer > 0)
+    {
+        return 1
+    }
+    else if(dwVehiclePointer <= 0)
+    {
+        return 0
+    }
+    else
+    {
+        return -1
+    }
+}
+getTargetVehicleHealthByPed(dwPed) {
+    if(!checkHandles())
+    return -1
+    dwVehPtr := getVehiclePointerByPed(dwPed)
+    dwAddr := dwVehPtr + ADDR_VEHICLE_HPOFF
+    fHealth := readFloat(hGTA, dwAddr)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return Round(fHealth)
+}
+getTargetVehicleHealthById(dwId) {
+    if(!checkHandles())
+    return -1
+    dwVehPtr := getVehiclePointerById(dwId)
+    dwAddr := dwVehPtr + ADDR_VEHICLE_HPOFF
+    fHealth := readFloat(hGTA, dwAddr)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return Round(fHealth)
+}
+getTargetVehicleTypeByPed(dwPED) {
+    if(!checkHandles())
+    return 0
+    dwAddr := getVehiclePointerByPed(dwPED)
+    if(!dwAddr)
+    return 0
+    cVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_TYPE, 1, "Char")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    if(!cVal)
+    {
+        mid := getVehicleModelId()
+        Loop % oAirplaneModels.MaxIndex()
+        {
+            if(oAirplaneModels[A_Index]==mid)
+            return 5
+        }
+        return 1
+    }
+    else if(cVal==5)
+    return 2
+    else if(cVal==6)
+    return 3
+    else if(cVal==9)
+    {
+        mid := getVehicleModelId()
+        Loop % oBikeModels.MaxIndex()
+        {
+            if(oBikeModels[A_Index]==mid)
+            return 6
+        }
+        return 4
+    }
+    return 0
+}
+getTargetVehicleTypeById(dwId) {
+    if(!checkHandles())
+    return 0
+    dwAddr := getVehiclePointerById(dwId)
+    if(!dwAddr)
+    return 0
+    cVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_TYPE, 1, "Char")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    if(!cVal)
+    {
+        mid := getVehicleModelId()
+        Loop % oAirplaneModels.MaxIndex()
+        {
+            if(oAirplaneModels[A_Index]==mid)
+            return 5
+        }
+        return 1
+    }
+    else if(cVal==5)
+    return 2
+    else if(cVal==6)
+    return 3
+    else if(cVal==9)
+    {
+        mid := getVehicleModelId()
+        Loop % oBikeModels.MaxIndex()
+        {
+            if(oBikeModels[A_Index]==mid)
+            return 6
+        }
+        return 4
+    }
+    return 0
+}
+getTargetVehicleModelIdByPed(dwPED) {
+    if(!checkHandles())
+    return 0
+    dwAddr := getVehiclePointerByPed(dwPED)
+    if(!dwAddr)
+    return 0
+    sVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_MODEL, 2, "Short")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return sVal
+}
+getTargetVehicleModelIdById(dwId) {
+    if(!checkHandles())
+    return 0
+    dwAddr := getVehiclePointerById(dwId)
+    if(!dwAddr)
+    return 0
+    sVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_MODEL, 2, "Short")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return sVal
+}
+getTargetVehicleModelNameByPed(dwPED) {
+    id := getTargetVehicleModelIdByPed(dwPED)
+    if(id > 400 && id < 611)
+    {
+        return ovehicleNames[id-399]
+    }
+    return ""
+}
+getTargetVehicleModelNameById(dwId) {
+    id := getTargetVehicleModelIdById(dwId)
+    if(id > 400 && id < 611)
+    {
+        return ovehicleNames[id-399]
+    }
+    return ""
+}
+getTargetVehicleLightStateByPed(dwPED) {
+    if(!checkHandles())
+    return -1
+    dwAddr := getVehiclePointerByPed(dwPED)
+    if(!dwAddr)
+    return -1
+    dwVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_LIGHTSTATE, 4, "Int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return (dwVal>0)
+}
+getTargetVehicleLightStateById(dwId) {
+    if(!checkHandles())
+    return -1
+    dwAddr := getVehiclePointerById(dwId)
+    if(!dwAddr)
+    return -1
+    dwVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_LIGHTSTATE, 4, "Int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return (dwVal>0)
+}
+getTargetVehicleLockStateByPed(dwPED) {
+    if(!checkHandles())
+    return -1
+    dwAddr := getVehiclePointerByPed(dwPED)
+    if(!dwAddr)
+    return -1
+    dwVal := readDWORD(hGTA, dwAddr + ADDR_VEHICLE_DOORSTATE)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return (dwVal==2)
+}
+getTargetVehicleLockStateById(dwId) {
+    if(!checkHandles())
+    return -1
+    dwAddr := getVehiclePointerById(dwId)
+    if(!dwAddr)
+    return -1
+    dwVal := readDWORD(hGTA, dwAddr + ADDR_VEHICLE_DOORSTATE)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return (dwVal==2)
+}
+getTargetVehicleColor1byPed(dwPED) {
+    if(!checkHandles())
+    return 0
+    dwAddr := getVehiclePointerByPed(dwPED)
+    if(!dwAddr)
+    return 0
+    sVal := readMem(hGTA, dwAddr + 1076, 1, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return sVal
+}
+getTargetVehicleColor1byId(dwId) {
+    if(!checkHandles())
+    return 0
+    dwAddr := getVehiclePointerById(dwId)
+    if(!dwAddr)
+    return 0
+    sVal := readMem(hGTA, dwAddr + 1076, 1, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return sVal
+}
+getTargetVehicleColor2byPed(dwPED) {
+    if(!checkHandles())
+    return 0
+    dwAddr := getVehiclePointerByPed(dwPED)
+    if(!dwAddr)
+    return 0
+    sVal := readMem(hGTA, dwAddr + 1077, 1, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return sVal
+}
+getTargetVehicleColor2byId(dwId) {
+    if(!checkHandles())
+    return 0
+    dwAddr := getVehiclePointerById(dwId)
+    if(!dwAddr)
+    return 0
+    sVal := readMem(hGTA, dwAddr + 1077, 1, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return sVal
+}
+getTargetVehicleSpeedByPed(dwPED) {
+    if(!checkHandles())
+    return -1
+    dwAddr := getVehiclePointerByPed(dwPED)
+    fSpeedX := readMem(hGTA, dwAddr + ADDR_VEHICLE_X, 4, "float")
+    fSpeedY := readMem(hGTA, dwAddr + ADDR_VEHICLE_Y, 4, "float")
+    fSpeedZ := readMem(hGTA, dwAddr + ADDR_VEHICLE_Z, 4, "float")
+    fVehicleSpeed :=  sqrt((fSpeedX * fSpeedX) + (fSpeedY * fSpeedY) + (fSpeedZ * fSpeedZ))
+    fVehicleSpeed := (fVehicleSpeed * 100) * 1.43
+    return fVehicleSpeed
+}
+getTargetVehicleSpeedById(dwId) {
+    if(!checkHandles())
+    return -1
+    dwAddr := getVehiclePointerById(dwId)
+    fSpeedX := readMem(hGTA, dwAddr + ADDR_VEHICLE_X, 4, "float")
+    fSpeedY := readMem(hGTA, dwAddr + ADDR_VEHICLE_Y, 4, "float")
+    fSpeedZ := readMem(hGTA, dwAddr + ADDR_VEHICLE_Z, 4, "float")
+    fVehicleSpeed :=  sqrt((fSpeedX * fSpeedX) + (fSpeedY * fSpeedY) + (fSpeedZ * fSpeedZ))
+    fVehicleSpeed := (fVehicleSpeed * 100) * 1.43
+    return fVehicleSpeed
+}
+getPlayerNameById(dwId) {
+    dwId += 0
+    dwId := Floor(dwId)
+    if(dwId < 0 || dwId >= SAMP_PLAYER_MAX)
+    return ""
+    if(iRefreshScoreboard+iUpdateTick > A_TickCount)
+    {
+        if(oScoreboardData[dwId])
+        return oScoreboardData[dwId].NAME
+        return ""
+    }
+    if(!updateOScoreboardData())
+    return ""
+    if(oScoreboardData[dwId])
+    return oScoreboardData[dwId].NAME
+    return ""
+}
+getPlayerIdByName(wName) {
+    wName := "" wName
+    if(StrLen(wName) < 1 || StrLen(wName) > 24)
+    return -1
+    if(iRefreshScoreboard+iUpdateTick > A_TickCount)
+    {
+        For i, o in oScoreboardData
+        {
+            if(InStr(o.NAME,wName)==1)
+            return i
+        }
+        return -1
+    }
+    if(!updateOScoreboardData())
+    return -1
+    For i, o in oScoreboardData
+    {
+        if(InStr(o.NAME,wName)==1)
+        return i
+    }
+    return -1
+}
+getPlayerScoreById(dwId) {
+    dwId += 0
+    dwId := Floor(dwId)
+    if(dwId < 0 || dwId >= SAMP_PLAYER_MAX)
+    return ""
+    if(iRefreshScoreboard+iUpdateTick > A_TickCount)
+    {
+        if(oScoreboardData[dwId])
+        return oScoreboardData[dwId].SCORE
+        return ""
+    }
+    if(!updateOScoreboardData())
+    return ""
+    if(oScoreboardData[dwId])
+    return oScoreboardData[dwId].SCORE
+    return ""
+}
+getPlayerPingById(dwId) {
+    dwId += 0
+    dwId := Floor(dwId)
+    if(dwId < 0 || dwId >= SAMP_PLAYER_MAX)
+    return -1
+    if(iRefreshScoreboard+iUpdateTick > A_TickCount)
+    {
+        if(oScoreboardData[dwId])
+        return oScoreboardData[dwId].PING
+        return -1
+    }
+    if(!updateOScoreboardData())
+    return -1
+    if(oScoreboardData[dwId])
+    return oScoreboardData[dwId].PING
+    return -1
+}
+isNPCById(dwId) {
+    dwId += 0
+    dwId := Floor(dwId)
+    if(dwId < 0 || dwId >= SAMP_PLAYER_MAX)
+    return -1
+    if(iRefreshScoreboard+iUpdateTick > A_TickCount)
+    {
+        if(oScoreboardData[dwId])
+        return oScoreboardData[dwId].ISNPC
+        return -1
+    }
+    if(!updateOScoreboardData())
+    return -1
+    if(oScoreboardData[dwId])
+    return oScoreboardData[dwId].ISNPC
+    return -1
+}
+updateScoreboardDataEx() {
+    if(!checkHandles())
+    return false
+    dwAddress := readDWORD(hGTA, dwSAMP + SAMP_INFO_OFFSET)
+    if(ErrorLevel || dwAddress==0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    dwFunc := dwSAMP + FUNC_UPDATESCOREBOARD
+    VarSetCapacity(injectData, 11, 0)
+    NumPut(0xB9, injectData, 0, "UChar")
+    NumPut(dwAddress, injectData, 1, "UInt")
+    NumPut(0xE8, injectData, 5, "UChar")
+    offset := dwFunc - (pInjectFunc + 10)
+    NumPut(offset, injectData, 6, "Int")
+    NumPut(0xC3, injectData, 10, "UChar")
+    writeRaw(hGTA, pInjectFunc, &injectData, 11)
+    if(ErrorLevel)
+    return false
+    hThread := createRemoteThread(hGTA, 0, 0, pInjectFunc, 0, 0, 0)
+    if(ErrorLevel)
+    return false
+    waitForSingleObject(hThread, 0xFFFFFFFF)
+    closeProcess(hThread)
+    return true
+}
+updateOScoreboardData() {
+    if(!checkHandles())
+    return 0
+    oScoreboardData := []
+    if(!updateScoreboardDataEx())
+    return 0
+    iRefreshScoreboard := A_TickCount
+    dwAddress := readDWORD(hGTA, dwSAMP + SAMP_INFO_OFFSET)
+    if(ErrorLevel || dwAddress==0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    dwAddress := readDWORD(hGTA, dwAddress + SAMP_PPOOLS_OFFSET)
+    if(ErrorLevel || dwAddress==0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    dwPlayers := readDWORD(hGTA, dwAddress + SAMP_PPOOL_PLAYER_OFFSET)
+    if(ErrorLevel || dwPlayers==0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    wID := readMem(hGTA, dwPlayers + SAMP_SLOCALPLAYERID_OFFSET, 2, "Short")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    dwPing := readMem(hGTA, dwPlayers + SAMP_ILOCALPLAYERPING_OFFSET, 4, "Int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    dwScore := readMem(hGTA, dwPlayers + SAMP_ILOCALPLAYERSCORE_OFFSET, 4, "Int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    dwTemp := readMem(hGTA, dwPlayers + SAMP_ISTRLEN_LOCALPLAYERNAME_OFFSET, 4, "Int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    sUsername := ""
+    if(dwTemp <= 0xf) {
+        sUsername := readString(hGTA, dwPlayers + SAMP_SZLOCALPLAYERNAME_OFFSET, 16)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+    }
+    else {
+        dwAddress := readDWORD(hGTA, dwPlayers + SAMP_PSZLOCALPLAYERNAME_OFFSET)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        sUsername := readString(hGTA, dwAddress, 25)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+    }
+    oScoreboardData[wID] := Object("NAME", sUsername, "ID", wID, "PING", dwPing, "SCORE", dwScore, "ISNPC", 0)
+    Loop, % SAMP_PLAYER_MAX
+    {
+        i := A_Index-1
+        dwRemoteplayer := readDWORD(hGTA, dwPlayers+SAMP_PREMOTEPLAYER_OFFSET+i*4)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        if(dwRemoteplayer==0)
+        continue
+        dwPing := readMem(hGTA, dwRemoteplayer + SAMP_IPING_OFFSET, 4, "Int")
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        dwScore := readMem(hGTA, dwRemoteplayer + SAMP_ISCORE_OFFSET, 4, "Int")
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        dwIsNPC := readMem(hGTA, dwRemoteplayer + SAMP_ISNPC_OFFSET, 4, "Int")
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        dwTemp := readMem(hGTA, dwRemoteplayer + SAMP_ISTRLENNAME___OFFSET, 4, "Int")
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        sUsername := ""
+        if(dwTemp <= 0xf)
+        {
+            sUsername := readString(hGTA, dwRemoteplayer+SAMP_SZPLAYERNAME_OFFSET, 16)
+            if(ErrorLevel) {
+                ErrorLevel := ERROR_READ_MEMORY
+                return 0
+            }
+        }
+        else {
+            dwAddress := readDWORD(hGTA, dwRemoteplayer + SAMP_PSZPLAYERNAME_OFFSET)
+            if(ErrorLevel || dwAddress==0) {
+                ErrorLevel := ERROR_READ_MEMORY
+                return 0
+            }
+            sUsername := readString(hGTA, dwAddress, 25)
+            if(ErrorLevel) {
+                ErrorLevel := ERROR_READ_MEMORY
+                return 0
+            }
+        }
+        o := Object("NAME", sUsername, "ID", i, "PING", dwPing, "SCORE", dwScore, "ISNPC", dwIsNPC)
+        oScoreboardData[i] := o
+        dwRemoteplayerData := readDWORD(hGTA, dwRemoteplayer + 0x0)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        if(dwRemoteplayerData==0)
+        continue
+        dwAddress := readDWORD(hGTA, dwRemoteplayerData + 489)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        if(dwAddress)
+        {
+            ix := readMem(hGTA, dwRemoteplayerData + 493, 4, "Int")
+            if(ErrorLevel) {
+                ErrorLevel := ERROR_READ_MEMORY
+                return 0
+            }
+            iy := readMem(hGTA, dwRemoteplayerData + 497, 4, "Int")
+            if(ErrorLevel) {
+                ErrorLevel := ERROR_READ_MEMORY
+                return 0
+            }
+            iz := readMem(hGTA, dwRemoteplayerData + 501, 4, "Int")
+            if(ErrorLevel) {
+                ErrorLevel := ERROR_READ_MEMORY
+                return 0
+            }
+            o.MPOS := [ix, iy, iz]
+        }
+        dwpSAMP_Actor := readDWORD(hGTA, dwRemoteplayerData + 0x0)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        if(dwpSAMP_Actor==0)
+        continue
+        dwPed := readDWORD(hGTA, dwpSAMP_Actor + 676)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        if(dwPed==0)
+        continue
+        o.PED := dwPed
+        fHP := readFloat(hGTA, dwRemoteplayerData + 444)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        fARMOR := readFloat(hGTA, dwRemoteplayerData + 440)
+        if(ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return 0
+        }
+        o.HP := fHP
+        o.ARMOR := fARMOR
+    }
+    ErrorLevel := ERROR_OK
+    return 1
+}
+GetChatLine(Line, ByRef Output, timestamp=0, color=0){
+    chatindex := 0
+    FileRead, file, %A_MyDocuments%\GTA San Andreas User Files\SAMP\chatlog.txt
+    loop, Parse, file, `n, `r
+    {
+        if(A_LoopField)
+        chatindex := A_Index
+    }
+    loop, Parse, file, `n, `r
+    {
+        if(A_Index = chatindex - line){
+            output := A_LoopField
+            break
+        }
+    }
+    file := ""
+    if(!timestamp)
+output := RegExReplace(output, "U)^\[\d{2}:\d{2}:\d{2}\]")
+    if(!color)
+output := RegExReplace(output, "Ui)\{[a-f0-9]{6}\}")
+    return
+}
+getPlayerHealth() {
+    if(!checkHandles())
+    return -1
+    dwCPedPtr := readDWORD(hGTA, ADDR_CPED_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    dwAddr := dwCPedPtr + ADDR_CPED_HPOFF
+    fHealth := readFloat(hGTA, dwAddr)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return Round(fHealth)
+}
+getPlayerArmor() {
+    if(!checkHandles())
+    return -1
+    dwCPedPtr := readDWORD(hGTA, ADDR_CPED_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    dwAddr := dwCPedPtr + ADDR_CPED_ARMOROFF
+    fHealth := readFloat(hGTA, dwAddr)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return Round(fHealth)
+}
+getPlayerInteriorId() {
+    if(!checkHandles())
+    return -1
+    iid := readMem(hGTA, ADDR_CPED_INTID, 4, "Int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return iid
+}
+getPlayerSkinID() {
+    if(!checkHandles())
+    return -1
+    dwCPedPtr := readDWORD(hGTA, ADDR_CPED_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    dwAddr := dwCPedPtr + ADDR_CPED_SKINIDOFF
+    SkinID := readMem(hGTA, dwAddr, 2, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return SkinID
+}
+getPlayerMoney() {
+    if(!checkHandles())
+    return ""
+    money := readMem(hGTA, ADDR_CPED_MONEY, 4, "Int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    ErrorLevel := ERROR_OK
+    return money
+}
+getPlayerWanteds() {
+    if(!checkHandles())
+    return -1
+    dwPtr := 0xB7CD9C
+    dwPtr := readDWORD(hGTA, dwPtr)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    Wanteds := readDWORD(hGTA, dwPtr)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return Wanteds
+}
+getPlayerWeaponId() {
+    if(!checkHandles())
+    return 0
+    WaffenId := readMem(hGTA, 0xBAA410, 4, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    return WaffenId
+}
+getPlayerWeaponName() {
+    id := getPlayerWeaponId()
+    if(id >= 0 && id < 44)
+    {
+        return oweaponNames[id+1]
+    }
+    return ""
+}
+getPlayerState() {
+    if(!checkHandles())
+    return -1
+    dwCPedPtr := readDWORD(hGTA, ADDR_CPED_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    State := readDWORD(hGTA, dwCPedPtr + 0x530)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return State
+}
+IsPlayerInMenu() {
+    if(!checkHandles())
+    return -1
+    IsInMenu := readMem(hGTA, 0xBA67A4, 4, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return IsInMenu
+}
+getPlayerMapPosX() {
+    if(!checkHandles())
+    return -1
+    MapPosX := readFloat(hGTA, 0xBA67B8)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return MapPosX
+}
+getPlayerMapPosY() {
+    if(!checkHandles())
+    return -1
+    MapPosY := readFloat(hGTA, 0xBA67BC)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return MapPosY
+}
+getPlayerMapZoom() {
+    if(!checkHandles())
+    return -1
+    MapZoom := readFloat(hGTA, 0xBA67AC)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return MapZoom
+}
+IsPlayerFreezed() {
+    if(!checkHandles())
+    return -1
+    dwGTA := getModuleBaseAddress("gta_sa.exe", hGTA)
+    IPF := readMem(hGTA, dwGTA + 0x690495, 2, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return IPF
+}
+isPlayerInAnyVehicle()
+{
+    if(!checkHandles())
+    return -1
+    dwVehPtr := readDWORD(hGTA, ADDR_VEHICLE_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    return (dwVehPtr > 0)
+}
+isPlayerDriver() {
+    if(!checkHandles())
+    return -1
+    dwAddr := readDWORD(hGTA, ADDR_VEHICLE_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    if(!dwAddr)
+    return -1
+    dwCPedPtr := readDWORD(hGTA, ADDR_CPED_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    dwVal := readDWORD(hGTA, dwAddr + ADDR_VEHICLE_DRIVER)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return (dwVal==dwCPedPtr)
+}
+getVehicleHealth() {
+    if(!checkHandles())
+    return -1
+    dwVehPtr := readDWORD(hGTA, ADDR_VEHICLE_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    dwAddr := dwVehPtr + ADDR_VEHICLE_HPOFF
+    fHealth := readFloat(hGTA, dwAddr)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return Round(fHealth)
+}
+getVehicleType() {
+    if(!checkHandles())
+    return 0
+    dwAddr := readDWORD(hGTA, ADDR_VEHICLE_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    if(!dwAddr)
+    return 0
+    cVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_TYPE, 1, "Char")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    if(!cVal)
+    {
+        mid := getVehicleModelId()
+        Loop % oAirplaneModels.MaxIndex()
+        {
+            if(oAirplaneModels[A_Index]==mid)
+            return 5
+        }
+        return 1
+    }
+    else if(cVal==5)
+    return 2
+    else if(cVal==6)
+    return 3
+    else if(cVal==9)
+    {
+        mid := getVehicleModelId()
+        Loop % oBikeModels.MaxIndex()
+        {
+            if(oBikeModels[A_Index]==mid)
+            return 6
+        }
+        return 4
+    }
+    return 0
+}
+getVehicleModelId() {
+    if(!checkHandles())
+    return 0
+    dwAddr := readDWORD(hGTA, ADDR_VEHICLE_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    if(!dwAddr)
+    return 0
+    sVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_MODEL, 2, "Short")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return sVal
+}
+getVehicleModelName() {
+    id:=getVehicleModelId()
+    if(id > 400 && id < 611)
+    {
+        return ovehicleNames[id-399]
+    }
+    return ""
+}
+getVehicleLightState() {
+    if(!checkHandles())
+    return -1
+    dwAddr := readDWORD(hGTA, ADDR_VEHICLE_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    if(!dwAddr)
+    return -1
+    dwVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_LIGHTSTATE, 4, "Int")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return (dwVal>0)
+}
+getVehicleEngineState() {
+    if(!checkHandles())
+    return -1
+    dwAddr := readDWORD(hGTA, ADDR_VEHICLE_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    if(!dwAddr)
+    return -1
+    cVal := readMem(hGTA, dwAddr + ADDR_VEHICLE_ENGINESTATE, 1, "Char")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return (cVal==24 || cVal==56 || cVal==88 || cVal==120)
+}
+getVehicleLockState() {
+    if(!checkHandles())
+    return -1
+    dwAddr := readDWORD(hGTA, ADDR_VEHICLE_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    if(!dwAddr)
+    return -1
+    dwVal := readDWORD(hGTA, dwAddr + ADDR_VEHICLE_DOORSTATE)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return (dwVal==2)
+}
+getVehicleColor1() {
+    if(!checkHandles())
+    return 0
+    dwAddr := readDWORD(hGTA, 0xBA18FC)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    if(!dwAddr)
+    return 0
+    sVal := readMem(hGTA, dwAddr + 1076, 1, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return sVal
+}
+getVehicleColor2() {
+    if(!checkHandles())
+    return 0
+    dwAddr := readDWORD(hGTA, 0xBA18FC)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    if(!dwAddr)
+    return 0
+    sVal := readMem(hGTA, dwAddr + 1077, 1, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return sVal
+}
+getVehicleSpeed() {
+    if(!checkHandles())
+    return -1
+    dwAddr := readDWORD(hGTA, ADDR_VEHICLE_PTR)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    fSpeedX := readMem(hGTA, dwAddr + ADDR_VEHICLE_X, 4, "float")
+    fSpeedY := readMem(hGTA, dwAddr + ADDR_VEHICLE_Y, 4, "float")
+    fSpeedZ := readMem(hGTA, dwAddr + ADDR_VEHICLE_Z, 4, "float")
+    fVehicleSpeed :=  sqrt((fSpeedX * fSpeedX) + (fSpeedY * fSpeedY) + (fSpeedZ * fSpeedZ))
+    fVehicleSpeed := (fVehicleSpeed * 100) * 1.43
+    return fVehicleSpeed
+}
+getPlayerRadiostationID() {
+    if(!checkHandles())
+    return -1
+    if(isPlayerInAnyVehicle() == 0)
+    return -1
+    dwGTA := getModuleBaseAddress("gta_sa.exe", hGTA)
+    RadioStationID := readMem(hGTA, dwGTA + 0x4CB7E1, 1, "byte")
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    return RadioStationID
+}
+getPlayerRadiostationName() {
+    if(isPlayerInAnyVehicle() == 0)
+    return -1
+    id := getPlayerRadiostationID()
+    if(id == 0)
+    return -1
+    if(id >= 0 && id < 14)
+    {
+        return oradiostationNames[id]
+    }
+    return ""
+}
+setCheckpoint(fX, fY, fZ, fSize ) {
+    if(!checkHandles())
+    return false
+    dwFunc := dwSAMP + 0x9D340
+    dwAddress := readDWORD(hGTA, dwSAMP + ADDR_SAMP_INCHAT_PTR)
+    if(ErrorLevel || dwAddress==0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    VarSetCapacity(buf, 16, 0)
+    NumPut(fX, buf, 0, "Float")
+    NumPut(fY, buf, 4, "Float")
+    NumPut(fZ, buf, 8, "Float")
+    NumPut(fSize, buf, 12, "Float")
+    writeRaw(hGTA, pParam1, &buf, 16)
+    dwLen := 31
+    VarSetCapacity(injectData, dwLen, 0)
+    NumPut(0xB9, injectData, 0, "UChar")
+    NumPut(dwAddress, injectData, 1, "UInt")
+    NumPut(0x68, injectData, 5, "UChar")
+    NumPut(pParam1+12, injectData, 6, "UInt")
+    NumPut(0x68, injectData, 10, "UChar")
+    NumPut(pParam1, injectData, 11, "UInt")
+    NumPut(0xE8, injectData, 15, "UChar")
+    offset := dwFunc - (pInjectFunc + 20)
+    NumPut(offset, injectData, 16, "Int")
+    NumPut(0x05C7, injectData, 20, "UShort")
+    NumPut(dwAddress+0x24, injectData, 22, "UInt")
+    NumPut(1, injectData, 26, "UInt")
+    NumPut(0xC3, injectData, 30, "UChar")
+    writeRaw(hGTA, pInjectFunc, &injectData, dwLen)
+    if(ErrorLevel)
+    return false
+    hThread := createRemoteThread(hGTA, 0, 0, pInjectFunc, 0, 0, 0)
+    if(ErrorLevel)
+    return false
+    waitForSingleObject(hThread, 0xFFFFFFFF)
+    closeProcess(hThread)
+    ErrorLevel := ERROR_OK
+    return true
+}
+disableCheckpoint()
+{
+    if(!checkHandles())
+    return false
+    dwAddress := readDWORD(hGTA, dwSAMP + ADDR_SAMP_INCHAT_PTR)
+    if(ErrorLevel || dwAddress==0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    VarSetCapacity(enablecp, 4, 0)
+    NumPut(0,enablecp,0,"Int")
+    writeRaw(hGTA, dwAddress+0x24, &enablecp, 4)
+    ErrorLevel := ERROR_OK
+    return true
+}
+IsMarkerCreated(){
+    If(!checkHandles())
+    return false
+    active := readMem(hGTA, CheckpointCheck, 1, "byte")
+    If(!active)
+    return 0
+    else return 1
+}
+CoordsFromRedmarker(){
+    if(!checkhandles())
+    return false
+    for i, v in rmaddrs
+    f%i% := readFloat(hGTA, v)
+    return [f1, f2, f3]
+}
+getCoordinates() {
+    if(!checkHandles())
+    return ""
+    fX := readFloat(hGTA, ADDR_POSITION_X)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    fY := readFloat(hGTA, ADDR_POSITION_Y)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    fZ := readFloat(hGTA, ADDR_POSITION_Z)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    ErrorLevel := ERROR_OK
+    return [fX, fY, fZ]
+}
+GetPlayerPos(ByRef fX,ByRef fY,ByRef fZ) {
+    if(!checkHandles())
+    return 0
+    fX := readFloat(hGTA, ADDR_POSITION_X)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    fY := readFloat(hGTA, ADDR_POSITION_Y)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    fZ := readFloat(hGTA, ADDR_POSITION_Z)
+    if(ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+}
+getDialogStructPtr() {
+    if (!checkHandles()) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return false
+    }
+    dwPointer := readDWORD(hGTA, dwSAMP + SAMP_DIALOG_STRUCT_PTR)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    ErrorLevel := ERROR_OK
+    return dwPointer
+}
+isDialogOpen() {
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return false
+    dwIsOpen := readMem(hGTA, dwPointer + SAMP_DIALOG_OPEN_OFFSET, 4, "UInt")
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    ErrorLevel := ERROR_OK
+    return dwIsOpen ? true : false
+}
+getDialogStyle() {
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return -1
+    style := readMem(hGTA, dwPointer + SAMP_DIALOG_STYLE_OFFSET, 4, "UInt")
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return style
+}
+getDialogID() {
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return -1
+    id := readMem(hGTA, dwPointer + SAMP_DIALOG_ID_OFFSET, 4, "UInt")
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    ErrorLevel := ERROR_OK
+    return id
+}
+setDialogID(id) {
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return false
+    writeMemory(hGTA, dwPointer + SAMP_DIALOG_ID_OFFSET, id, "UInt", 4)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_WRITE_MEMORY
+        return false
+    }
+    ErrorLevel := ERROR_OK
+    return true
+}
+getDialogIndex() {
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return 0
+    dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_PTR1_OFFSET)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    index := readMem(hGTA, dwPointer + SAMP_DIALOG_INDEX_OFFSET, 1, "Byte")
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return index + 1
+}
+getDialogCaption() {
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return ""
+    text := readString(hGTA, dwPointer + SAMP_DIALOG_CAPTION_OFFSET, 64)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    ErrorLevel := ERROR_OK
+    return text
+}
+getDialogTextSize(dwAddress) {
+    i := 0
+    Loop, 4096 {
+        i := A_Index - 1
+        byte := Memory_ReadByte(hGTA, dwAddress + i)
+        if (!byte)
+        break
+    }
+    return i
+}
+getDialogText() {
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return ""
+    dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_TEXT_PTR_OFFSET)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    text := readString(hGTA, dwPointer, 4096)
+    if (ErrorLevel) {
+        text := readString(hGTA, dwPointer, getDialogTextSize(dwPointer))
+        if (ErrorLevel) {
+            ErrorLevel := ERROR_READ_MEMORY
+            return ""
+        }
+    }
+    ErrorLevel := ERROR_OK
+    return text
+}
+getDialogLineCount() {
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return 0
+    dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_PTR2_OFFSET)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    count := readMem(hGTA, dwPointer + SAMP_DIALOG_LINECOUNT_OFFSET, 4, "UInt")
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return count
+}
+getDialogLine__(index) {
+    if (getDialogLineCount > index)
+    return ""
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return ""
+    dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_PTR1_OFFSET)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_LINES_OFFSET)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return ""
+    }
+    dwLineAddress := readDWORD(hGTA, dwPointer + (index - 1) * 0x4)
+    line := readString(hGTA, dwLineAddress, 128)
+    ErrorLevel := ERROR_OK
+    return line
+}
+getDialogLine(index) {
+    lines := getDialogLines()
+    if (index > lines.Length())
+    return ""
+    if (getDialogStyle() == DIALOG_STYLE_TABLIST_HEADERS)
+    index++
+    return lines[index]
+}
+getDialogLines() {
+    text := getDialogText()
+    if (text == "")
+    return -1
+    lines := StrSplit(text, "`n")
+    return lines
+}
+isDialogButton1Selected() {
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return false
+    dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_PTR1_OFFSET)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    selected := readMem(hGTA, dwPointer + SAMP_DIALOG_BUTTON_HOVERING_OFFSET, 1, "Byte")
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    ErrorLevel := ERROR_OK
+    return selected
+}
+getDialogLines__() {
+    count := getDialogLineCount()
+    dwPointer := getDialogStructPtr()
+    if (ErrorLevel || !dwPointer)
+    return -1
+    dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_PTR1_OFFSET)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    dwPointer := readDWORD(hGTA, dwPointer + SAMP_DIALOG_LINES_OFFSET)
+    if (ErrorLevel) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return -1
+    }
+    lines := []
+    Loop %count% {
+        dwLineAddress := readDWORD(hGTA, dwPointer + (A_Index - 1) * 0x4)
+        lines[A_Index] := readString(hGTA, dwLineAddress, 128)
+    }
+    ErrorLevel := ERROR_OK
+    return lines
+}
+showDialog(style, caption, text, button1, button2 := "", id := 1) {
+    style += 0
+    style := Floor(style)
+    id += 0
+    id := Floor(id)
+    caption := "" caption
+    text := "" text
+    button1 := "" button1
+    button2 := "" button2
+    if (id < 0 || id > 32767 || style < 0 || style > 5 || StrLen(caption) > 64 || StrLen(text) > 4096 || StrLen(button1) > 10 || StrLen(button2) > 10)
+    return false
+    if (!checkHandles())
+    return false
+    dwFunc := dwSAMP + FUNC_SAMP_SHOWDIALOG
+    dwAddress := readDWORD(hGTA, dwSAMP + SAMP_DIALOG_STRUCT_PTR)
+    if (ErrorLevel || !dwAddress) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return false
+    }
+    writeString(hGTA, pParam5, caption)
+    if (ErrorLevel)
+    return false
+    writeString(hGTA, pParam1, text)
+    if (ErrorLevel)
+    return false
+    writeString(hGTA, pParam5 + 512, button1)
+    if (ErrorLevel)
+    return false
+    writeString(hGTA, pParam5+StrLen(caption) + 1, button2)
+    if (ErrorLevel)
+    return false
+    dwLen := 5 + 7 * 5 + 5 + 1
+    VarSetCapacity(injectData, dwLen, 0)
+    NumPut(0xB9, injectData, 0, "UChar")
+    NumPut(dwAddress, injectData, 1, "UInt")
+    NumPut(0x68, injectData, 5, "UChar")
+    NumPut(1, injectData, 6, "UInt")
+    NumPut(0x68, injectData, 10, "UChar")
+    NumPut(pParam5 + StrLen(caption) + 1, injectData, 11, "UInt")
+    NumPut(0x68, injectData, 15, "UChar")
+    NumPut(pParam5 + 512, injectData, 16, "UInt")
+    NumPut(0x68, injectData, 20, "UChar")
+    NumPut(pParam1, injectData, 21, "UInt")
+    NumPut(0x68, injectData, 25, "UChar")
+    NumPut(pParam5, injectData, 26, "UInt")
+    NumPut(0x68, injectData, 30, "UChar")
+    NumPut(style, injectData, 31, "UInt")
+    NumPut(0x68, injectData, 35, "UChar")
+    NumPut(id, injectData, 36, "UInt")
+    NumPut(0xE8, injectData, 40, "UChar")
+    offset := dwFunc - (pInjectFunc + 45)
+    NumPut(offset, injectData, 41, "Int")
+    NumPut(0xC3, injectData, 45, "UChar")
+    writeRaw(hGTA, pInjectFunc, &injectData, dwLen)
+    if (ErrorLevel)
+    return false
+    hThread := createRemoteThread(hGTA, 0, 0, pInjectFunc, 0, 0, 0)
+    if (ErrorLevel)
+    return false
+    waitForSingleObject(hThread, 0xFFFFFFFF)
+    closeProcess(hThread)
+    return true
+}
+initZonesAndCities() {
+    AddCity("Las Venturas", 685.0, 476.093, -500.0, 3000.0, 3000.0, 500.0)
+    AddCity("San Fierro", -3000.0, -742.306, -500.0, -1270.53, 1530.24, 500.0)
+    AddCity("San Fierro", -1270.53, -402.481, -500.0, -1038.45, 832.495, 500.0)
+    AddCity("San Fierro", -1038.45, -145.539, -500.0, -897.546, 376.632, 500.0)
+    AddCity("Los Santos", 480.0, -3000.0, -500.0, 3000.0, -850.0, 500.0)
+    AddCity("Los Santos", 80.0, -2101.61, -500.0, 1075.0, -1239.61, 500.0)
+    AddCity("Tierra Robada", -1213.91, 596.349, -242.99, -480.539, 1659.68, 900.0)
+    AddCity("Red County", -1213.91, -768.027, -242.99, 2997.06, 596.349, 900.0)
+    AddCity("Flint County", -1213.91, -2892.97, -242.99, 44.6147, -768.027, 900.0)
+    AddCity("Whetstone", -2997.47, -2892.97, -242.99, -1213.91, -1115.58, 900.0)
+    AddZone("Avispa Country Club", -2667.810, -302.135, -28.831, -2646.400, -262.320, 71.169)
+    AddZone("Easter Bay Airport", -1315.420, -405.388, 15.406, -1264.400, -209.543, 25.406)
+    AddZone("Avispa Country Club", -2550.040, -355.493, 0.000, -2470.040, -318.493, 39.700)
+    AddZone("Easter Bay Airport", -1490.330, -209.543, 15.406, -1264.400, -148.388, 25.406)
+    AddZone("Garcia", -2395.140, -222.589, -5.3, -2354.090, -204.792, 200.000)
+    AddZone("Shady Cabin", -1632.830, -2263.440, -3.0, -1601.330, -2231.790, 200.000)
+    AddZone("East Los Santos", 2381.680, -1494.030, -89.084, 2421.030, -1454.350, 110.916)
+    AddZone("LVA Freight Depot", 1236.630, 1163.410, -89.084, 1277.050, 1203.280, 110.916)
+    AddZone("Blackfield Intersection", 1277.050, 1044.690, -89.084, 1315.350, 1087.630, 110.916)
+    AddZone("Avispa Country Club", -2470.040, -355.493, 0.000, -2270.040, -318.493, 46.100)
+    AddZone("Temple", 1252.330, -926.999, -89.084, 1357.000, -910.170, 110.916)
+    AddZone("Unity Station", 1692.620, -1971.800, -20.492, 1812.620, -1932.800, 79.508)
+    AddZone("LVA Freight Depot", 1315.350, 1044.690, -89.084, 1375.600, 1087.630, 110.916)
+    AddZone("Los Flores", 2581.730, -1454.350, -89.084, 2632.830, -1393.420, 110.916)
+    AddZone("Starfish Casino", 2437.390, 1858.100, -39.084, 2495.090, 1970.850, 60.916)
+    AddZone("Easter Bay Chemicals", -1132.820, -787.391, 0.000, -956.476, -768.027, 200.000)
+    AddZone("Downtown Los Santos", 1370.850, -1170.870, -89.084, 1463.900, -1130.850, 110.916)
+    AddZone("Esplanade East", -1620.300, 1176.520, -4.5, -1580.010, 1274.260, 200.000)
+    AddZone("Market Station", 787.461, -1410.930, -34.126, 866.009, -1310.210, 65.874)
+    AddZone("Linden Station", 2811.250, 1229.590, -39.594, 2861.250, 1407.590, 60.406)
+    AddZone("Montgomery Intersection", 1582.440, 347.457, 0.000, 1664.620, 401.750, 200.000)
+    AddZone("Frederick Bridge", 2759.250, 296.501, 0.000, 2774.250, 594.757, 200.000)
+    AddZone("Yellow Bell Station", 1377.480, 2600.430, -21.926, 1492.450, 2687.360, 78.074)
+    AddZone("Downtown Los Santos", 1507.510, -1385.210, 110.916, 1582.550, -1325.310, 335.916)
+    AddZone("Jefferson", 2185.330, -1210.740, -89.084, 2281.450, -1154.590, 110.916)
+    AddZone("Mulholland", 1318.130, -910.170, -89.084, 1357.000, -768.027, 110.916)
+    AddZone("Avispa Country Club", -2361.510, -417.199, 0.000, -2270.040, -355.493, 200.000)
+    AddZone("Jefferson", 1996.910, -1449.670, -89.084, 2056.860, -1350.720, 110.916)
+    AddZone("Julius Thruway West", 1236.630, 2142.860, -89.084, 1297.470, 2243.230, 110.916)
+    AddZone("Jefferson", 2124.660, -1494.030, -89.084, 2266.210, -1449.670, 110.916)
+    AddZone("Julius Thruway North", 1848.400, 2478.490, -89.084, 1938.800, 2553.490, 110.916)
+    AddZone("Rodeo", 422.680, -1570.200, -89.084, 466.223, -1406.050, 110.916)
+    AddZone("Cranberry Station", -2007.830, 56.306, 0.000, -1922.000, 224.782, 100.000)
+    AddZone("Downtown Los Santos", 1391.050, -1026.330, -89.084, 1463.900, -926.999, 110.916)
+    AddZone("Redsands West", 1704.590, 2243.230, -89.084, 1777.390, 2342.830, 110.916)
+    AddZone("Little Mexico", 1758.900, -1722.260, -89.084, 1812.620, -1577.590, 110.916)
+    AddZone("Blackfield Intersection", 1375.600, 823.228, -89.084, 1457.390, 919.447, 110.916)
+    AddZone("Los Santos International", 1974.630, -2394.330, -39.084, 2089.000, -2256.590, 60.916)
+    AddZone("Beacon Hill", -399.633, -1075.520, -1.489, -319.033, -977.516, 198.511)
+    AddZone("Rodeo", 334.503, -1501.950, -89.084, 422.680, -1406.050, 110.916)
+    AddZone("Richman", 225.165, -1369.620, -89.084, 334.503, -1292.070, 110.916)
+    AddZone("Downtown Los Santos", 1724.760, -1250.900, -89.084, 1812.620, -1150.870, 110.916)
+    AddZone("The Strip", 2027.400, 1703.230, -89.084, 2137.400, 1783.230, 110.916)
+    AddZone("Downtown Los Santos", 1378.330, -1130.850, -89.084, 1463.900, -1026.330, 110.916)
+    AddZone("Blackfield Intersection", 1197.390, 1044.690, -89.084, 1277.050, 1163.390, 110.916)
+    AddZone("Conference Center", 1073.220, -1842.270, -89.084, 1323.900, -1804.210, 110.916)
+    AddZone("Montgomery", 1451.400, 347.457, -6.1, 1582.440, 420.802, 200.000)
+    AddZone("Foster Valley", -2270.040, -430.276, -1.2, -2178.690, -324.114, 200.000)
+    AddZone("Blackfield Chapel", 1325.600, 596.349, -89.084, 1375.600, 795.010, 110.916)
+    AddZone("Los Santos International", 2051.630, -2597.260, -39.084, 2152.450, -2394.330, 60.916)
+    AddZone("Mulholland", 1096.470, -910.170, -89.084, 1169.130, -768.027, 110.916)
+    AddZone("Yellow Bell Gol Course", 1457.460, 2723.230, -89.084, 1534.560, 2863.230, 110.916)
+    AddZone("The Strip", 2027.400, 1783.230, -89.084, 2162.390, 1863.230, 110.916)
+    AddZone("Jefferson", 2056.860, -1210.740, -89.084, 2185.330, -1126.320, 110.916)
+    AddZone("Mulholland", 952.604, -937.184, -89.084, 1096.470, -860.619, 110.916)
+    AddZone("Aldea Malvada", -1372.140, 2498.520, 0.000, -1277.590, 2615.350, 200.000)
+    AddZone("Las Colinas", 2126.860, -1126.320, -89.084, 2185.330, -934.489, 110.916)
+    AddZone("Las Colinas", 1994.330, -1100.820, -89.084, 2056.860, -920.815, 110.916)
+    AddZone("Richman", 647.557, -954.662, -89.084, 768.694, -860.619, 110.916)
+    AddZone("LVA Freight Depot", 1277.050, 1087.630, -89.084, 1375.600, 1203.280, 110.916)
+    AddZone("Julius Thruway North", 1377.390, 2433.230, -89.084, 1534.560, 2507.230, 110.916)
+    AddZone("Willowfield", 2201.820, -2095.000, -89.084, 2324.000, -1989.900, 110.916)
+    AddZone("Julius Thruway North", 1704.590, 2342.830, -89.084, 1848.400, 2433.230, 110.916)
+    AddZone("Temple", 1252.330, -1130.850, -89.084, 1378.330, -1026.330, 110.916)
+    AddZone("Little Mexico", 1701.900, -1842.270, -89.084, 1812.620, -1722.260, 110.916)
+    AddZone("Queens", -2411.220, 373.539, 0.000, -2253.540, 458.411, 200.000)
+    AddZone("Las Venturas Airport", 1515.810, 1586.400, -12.500, 1729.950, 1714.560, 87.500)
+    AddZone("Richman", 225.165, -1292.070, -89.084, 466.223, -1235.070, 110.916)
+    AddZone("Temple", 1252.330, -1026.330, -89.084, 1391.050, -926.999, 110.916)
+    AddZone("East Los Santos", 2266.260, -1494.030, -89.084, 2381.680, -1372.040, 110.916)
+    AddZone("Julius Thruway East", 2623.180, 943.235, -89.084, 2749.900, 1055.960, 110.916)
+    AddZone("Willowfield", 2541.700, -1941.400, -89.084, 2703.580, -1852.870, 110.916)
+    AddZone("Las Colinas", 2056.860, -1126.320, -89.084, 2126.860, -920.815, 110.916)
+    AddZone("Julius Thruway East", 2625.160, 2202.760, -89.084, 2685.160, 2442.550, 110.916)
+    AddZone("Rodeo", 225.165, -1501.950, -89.084, 334.503, -1369.620, 110.916)
+    AddZone("Las Brujas", -365.167, 2123.010, -3.0, -208.570, 2217.680, 200.000)
+    AddZone("Julius Thruway East", 2536.430, 2442.550, -89.084, 2685.160, 2542.550, 110.916)
+    AddZone("Rodeo", 334.503, -1406.050, -89.084, 466.223, -1292.070, 110.916)
+    AddZone("Vinewood", 647.557, -1227.280, -89.084, 787.461, -1118.280, 110.916)
+    AddZone("Rodeo", 422.680, -1684.650, -89.084, 558.099, -1570.200, 110.916)
+    AddZone("Julius Thruway North", 2498.210, 2542.550, -89.084, 2685.160, 2626.550, 110.916)
+    AddZone("Downtown Los Santos", 1724.760, -1430.870, -89.084, 1812.620, -1250.900, 110.916)
+    AddZone("Rodeo", 225.165, -1684.650, -89.084, 312.803, -1501.950, 110.916)
+    AddZone("Jefferson", 2056.860, -1449.670, -89.084, 2266.210, -1372.040, 110.916)
+    AddZone("Hampton Barns", 603.035, 264.312, 0.000, 761.994, 366.572, 200.000)
+    AddZone("Temple", 1096.470, -1130.840, -89.084, 1252.330, -1026.330, 110.916)
+    AddZone("Kincaid Bridge", -1087.930, 855.370, -89.084, -961.950, 986.281, 110.916)
+    AddZone("Verona Beach", 1046.150, -1722.260, -89.084, 1161.520, -1577.590, 110.916)
+    AddZone("Commerce", 1323.900, -1722.260, -89.084, 1440.900, -1577.590, 110.916)
+    AddZone("Mulholland", 1357.000, -926.999, -89.084, 1463.900, -768.027, 110.916)
+    AddZone("Rodeo", 466.223, -1570.200, -89.084, 558.099, -1385.070, 110.916)
+    AddZone("Mulholland", 911.802, -860.619, -89.084, 1096.470, -768.027, 110.916)
+    AddZone("Mulholland", 768.694, -954.662, -89.084, 952.604, -860.619, 110.916)
+    AddZone("Julius Thruway South", 2377.390, 788.894, -89.084, 2537.390, 897.901, 110.916)
+    AddZone("Idlewood", 1812.620, -1852.870, -89.084, 1971.660, -1742.310, 110.916)
+    AddZone("Ocean Docks", 2089.000, -2394.330, -89.084, 2201.820, -2235.840, 110.916)
+    AddZone("Commerce", 1370.850, -1577.590, -89.084, 1463.900, -1384.950, 110.916)
+    AddZone("Julius Thruway North", 2121.400, 2508.230, -89.084, 2237.400, 2663.170, 110.916)
+    AddZone("Temple", 1096.470, -1026.330, -89.084, 1252.330, -910.170, 110.916)
+    AddZone("Glen Park", 1812.620, -1449.670, -89.084, 1996.910, -1350.720, 110.916)
+    AddZone("Easter Bay Airport", -1242.980, -50.096, 0.000, -1213.910, 578.396, 200.000)
+    AddZone("Martin Bridge", -222.179, 293.324, 0.000, -122.126, 476.465, 200.000)
+    AddZone("The Strip", 2106.700, 1863.230, -89.084, 2162.390, 2202.760, 110.916)
+    AddZone("Willowfield", 2541.700, -2059.230, -89.084, 2703.580, -1941.400, 110.916)
+    AddZone("Marina", 807.922, -1577.590, -89.084, 926.922, -1416.250, 110.916)
+    AddZone("Las Venturas Airport", 1457.370, 1143.210, -89.084, 1777.400, 1203.280, 110.916)
+    AddZone("Idlewood", 1812.620, -1742.310, -89.084, 1951.660, -1602.310, 110.916)
+    AddZone("Esplanade East", -1580.010, 1025.980, -6.1, -1499.890, 1274.260, 200.000)
+    AddZone("Downtown Los Santos", 1370.850, -1384.950, -89.084, 1463.900, -1170.870, 110.916)
+    AddZone("The Mako Span", 1664.620, 401.750, 0.000, 1785.140, 567.203, 200.000)
+    AddZone("Rodeo", 312.803, -1684.650, -89.084, 422.680, -1501.950, 110.916)
+    AddZone("Pershing Square", 1440.900, -1722.260, -89.084, 1583.500, -1577.590, 110.916)
+    AddZone("Mulholland", 687.802, -860.619, -89.084, 911.802, -768.027, 110.916)
+    AddZone("Gant Bridge", -2741.070, 1490.470, -6.1, -2616.400, 1659.680, 200.000)
+    AddZone("Las Colinas", 2185.330, -1154.590, -89.084, 2281.450, -934.489, 110.916)
+    AddZone("Mulholland", 1169.130, -910.170, -89.084, 1318.130, -768.027, 110.916)
+    AddZone("Julius Thruway North", 1938.800, 2508.230, -89.084, 2121.400, 2624.230, 110.916)
+    AddZone("Commerce", 1667.960, -1577.590, -89.084, 1812.620, -1430.870, 110.916)
+    AddZone("Rodeo", 72.648, -1544.170, -89.084, 225.165, -1404.970, 110.916)
+    AddZone("Roca Escalante", 2536.430, 2202.760, -89.084, 2625.160, 2442.550, 110.916)
+    AddZone("Rodeo", 72.648, -1684.650, -89.084, 225.165, -1544.170, 110.916)
+    AddZone("Market", 952.663, -1310.210, -89.084, 1072.660, -1130.850, 110.916)
+    AddZone("Las Colinas", 2632.740, -1135.040, -89.084, 2747.740, -945.035, 110.916)
+    AddZone("Mulholland", 861.085, -674.885, -89.084, 1156.550, -600.896, 110.916)
+    AddZone("King's", -2253.540, 373.539, -9.1, -1993.280, 458.411, 200.000)
+    AddZone("Redsands East", 1848.400, 2342.830, -89.084, 2011.940, 2478.490, 110.916)
+    AddZone("Downtown", -1580.010, 744.267, -6.1, -1499.890, 1025.980, 200.000)
+    AddZone("Conference Center", 1046.150, -1804.210, -89.084, 1323.900, -1722.260, 110.916)
+    AddZone("Richman", 647.557, -1118.280, -89.084, 787.461, -954.662, 110.916)
+    AddZone("Ocean Flats", -2994.490, 277.411, -9.1, -2867.850, 458.411, 200.000)
+    AddZone("Greenglass College", 964.391, 930.890, -89.084, 1166.530, 1044.690, 110.916)
+    AddZone("Glen Park", 1812.620, -1100.820, -89.084, 1994.330, -973.380, 110.916)
+    AddZone("LVA Freight Depot", 1375.600, 919.447, -89.084, 1457.370, 1203.280, 110.916)
+    AddZone("Regular Tom", -405.770, 1712.860, -3.0, -276.719, 1892.750, 200.000)
+    AddZone("Verona Beach", 1161.520, -1722.260, -89.084, 1323.900, -1577.590, 110.916)
+    AddZone("East Los Santos", 2281.450, -1372.040, -89.084, 2381.680, -1135.040, 110.916)
+    AddZone("Caligula's Palace", 2137.400, 1703.230, -89.084, 2437.390, 1783.230, 110.916)
+    AddZone("Idlewood", 1951.660, -1742.310, -89.084, 2124.660, -1602.310, 110.916)
+    AddZone("Pilgrim", 2624.400, 1383.230, -89.084, 2685.160, 1783.230, 110.916)
+    AddZone("Idlewood", 2124.660, -1742.310, -89.084, 2222.560, -1494.030, 110.916)
+    AddZone("Queens", -2533.040, 458.411, 0.000, -2329.310, 578.396, 200.000)
+    AddZone("Downtown", -1871.720, 1176.420, -4.5, -1620.300, 1274.260, 200.000)
+    AddZone("Commerce", 1583.500, -1722.260, -89.084, 1758.900, -1577.590, 110.916)
+    AddZone("East Los Santos", 2381.680, -1454.350, -89.084, 2462.130, -1135.040, 110.916)
+    AddZone("Marina", 647.712, -1577.590, -89.084, 807.922, -1416.250, 110.916)
+    AddZone("Richman", 72.648, -1404.970, -89.084, 225.165, -1235.070, 110.916)
+    AddZone("Vinewood", 647.712, -1416.250, -89.084, 787.461, -1227.280, 110.916)
+    AddZone("East Los Santos", 2222.560, -1628.530, -89.084, 2421.030, -1494.030, 110.916)
+    AddZone("Rodeo", 558.099, -1684.650, -89.084, 647.522, -1384.930, 110.916)
+    AddZone("Easter Tunnel", -1709.710, -833.034, -1.5, -1446.010, -730.118, 200.000)
+    AddZone("Rodeo", 466.223, -1385.070, -89.084, 647.522, -1235.070, 110.916)
+    AddZone("Redsands East", 1817.390, 2202.760, -89.084, 2011.940, 2342.830, 110.916)
+    AddZone("The Clown's Pocket", 2162.390, 1783.230, -89.084, 2437.390, 1883.230, 110.916)
+    AddZone("Idlewood", 1971.660, -1852.870, -89.084, 2222.560, -1742.310, 110.916)
+    AddZone("Montgomery Intersection", 1546.650, 208.164, 0.000, 1745.830, 347.457, 200.000)
+    AddZone("Willowfield", 2089.000, -2235.840, -89.084, 2201.820, -1989.900, 110.916)
+    AddZone("Temple", 952.663, -1130.840, -89.084, 1096.470, -937.184, 110.916)
+    AddZone("Prickle Pine", 1848.400, 2553.490, -89.084, 1938.800, 2863.230, 110.916)
+    AddZone("Los Santos International", 1400.970, -2669.260, -39.084, 2189.820, -2597.260, 60.916)
+    AddZone("Garver Bridge", -1213.910, 950.022, -89.084, -1087.930, 1178.930, 110.916)
+    AddZone("Garver Bridge", -1339.890, 828.129, -89.084, -1213.910, 1057.040, 110.916)
+    AddZone("Kincaid Bridge", -1339.890, 599.218, -89.084, -1213.910, 828.129, 110.916)
+    AddZone("Kincaid Bridge", -1213.910, 721.111, -89.084, -1087.930, 950.022, 110.916)
+    AddZone("Verona Beach", 930.221, -2006.780, -89.084, 1073.220, -1804.210, 110.916)
+    AddZone("Verdant Bluffs", 1073.220, -2006.780, -89.084, 1249.620, -1842.270, 110.916)
+    AddZone("Vinewood", 787.461, -1130.840, -89.084, 952.604, -954.662, 110.916)
+    AddZone("Vinewood", 787.461, -1310.210, -89.084, 952.663, -1130.840, 110.916)
+    AddZone("Commerce", 1463.900, -1577.590, -89.084, 1667.960, -1430.870, 110.916)
+    AddZone("Market", 787.461, -1416.250, -89.084, 1072.660, -1310.210, 110.916)
+    AddZone("Rockshore West", 2377.390, 596.349, -89.084, 2537.390, 788.894, 110.916)
+    AddZone("Julius Thruway North", 2237.400, 2542.550, -89.084, 2498.210, 2663.170, 110.916)
+    AddZone("East Beach", 2632.830, -1668.130, -89.084, 2747.740, -1393.420, 110.916)
+    AddZone("Fallow Bridge", 434.341, 366.572, 0.000, 603.035, 555.680, 200.000)
+    AddZone("Willowfield", 2089.000, -1989.900, -89.084, 2324.000, -1852.870, 110.916)
+    AddZone("Chinatown", -2274.170, 578.396, -7.6, -2078.670, 744.170, 200.000)
+    AddZone("El Castillo del Diablo", -208.570, 2337.180, 0.000, 8.430, 2487.180, 200.000)
+    AddZone("Ocean Docks", 2324.000, -2145.100, -89.084, 2703.580, -2059.230, 110.916)
+    AddZone("Easter Bay Chemicals", -1132.820, -768.027, 0.000, -956.476, -578.118, 200.000)
+    AddZone("The Visage", 1817.390, 1703.230, -89.084, 2027.400, 1863.230, 110.916)
+    AddZone("Ocean Flats", -2994.490, -430.276, -1.2, -2831.890, -222.589, 200.000)
+    AddZone("Richman", 321.356, -860.619, -89.084, 687.802, -768.027, 110.916)
+    AddZone("Green Palms", 176.581, 1305.450, -3.0, 338.658, 1520.720, 200.000)
+    AddZone("Richman", 321.356, -768.027, -89.084, 700.794, -674.885, 110.916)
+    AddZone("Starfish Casino", 2162.390, 1883.230, -89.084, 2437.390, 2012.180, 110.916)
+    AddZone("East Beach", 2747.740, -1668.130, -89.084, 2959.350, -1498.620, 110.916)
+    AddZone("Jefferson", 2056.860, -1372.040, -89.084, 2281.450, -1210.740, 110.916)
+    AddZone("Downtown Los Santos", 1463.900, -1290.870, -89.084, 1724.760, -1150.870, 110.916)
+    AddZone("Downtown Los Santos", 1463.900, -1430.870, -89.084, 1724.760, -1290.870, 110.916)
+    AddZone("Garver Bridge", -1499.890, 696.442, -179.615, -1339.890, 925.353, 20.385)
+    AddZone("Julius Thruway South", 1457.390, 823.228, -89.084, 2377.390, 863.229, 110.916)
+    AddZone("East Los Santos", 2421.030, -1628.530, -89.084, 2632.830, -1454.350, 110.916)
+    AddZone("Greenglass College", 964.391, 1044.690, -89.084, 1197.390, 1203.220, 110.916)
+    AddZone("Las Colinas", 2747.740, -1120.040, -89.084, 2959.350, -945.035, 110.916)
+    AddZone("Mulholland", 737.573, -768.027, -89.084, 1142.290, -674.885, 110.916)
+    AddZone("Ocean Docks", 2201.820, -2730.880, -89.084, 2324.000, -2418.330, 110.916)
+    AddZone("East Los Santos", 2462.130, -1454.350, -89.084, 2581.730, -1135.040, 110.916)
+    AddZone("Ganton", 2222.560, -1722.330, -89.084, 2632.830, -1628.530, 110.916)
+    AddZone("Avispa Country Club", -2831.890, -430.276, -6.1, -2646.400, -222.589, 200.000)
+    AddZone("Willowfield", 1970.620, -2179.250, -89.084, 2089.000, -1852.870, 110.916)
+    AddZone("Esplanade North", -1982.320, 1274.260, -4.5, -1524.240, 1358.900, 200.000)
+    AddZone("The High Roller", 1817.390, 1283.230, -89.084, 2027.390, 1469.230, 110.916)
+    AddZone("Ocean Docks", 2201.820, -2418.330, -89.084, 2324.000, -2095.000, 110.916)
+    AddZone("Last Dime Motel", 1823.080, 596.349, -89.084, 1997.220, 823.228, 110.916)
+    AddZone("Bayside Marina", -2353.170, 2275.790, 0.000, -2153.170, 2475.790, 200.000)
+    AddZone("King's", -2329.310, 458.411, -7.6, -1993.280, 578.396, 200.000)
+    AddZone("El Corona", 1692.620, -2179.250, -89.084, 1812.620, -1842.270, 110.916)
+    AddZone("Blackfield Chapel", 1375.600, 596.349, -89.084, 1558.090, 823.228, 110.916)
+    AddZone("The Pink Swan", 1817.390, 1083.230, -89.084, 2027.390, 1283.230, 110.916)
+    AddZone("Julius Thruway West", 1197.390, 1163.390, -89.084, 1236.630, 2243.230, 110.916)
+    AddZone("Los Flores", 2581.730, -1393.420, -89.084, 2747.740, -1135.040, 110.916)
+    AddZone("The Visage", 1817.390, 1863.230, -89.084, 2106.700, 2011.830, 110.916)
+    AddZone("Prickle Pine", 1938.800, 2624.230, -89.084, 2121.400, 2861.550, 110.916)
+    AddZone("Verona Beach", 851.449, -1804.210, -89.084, 1046.150, -1577.590, 110.916)
+    AddZone("Robada Intersection", -1119.010, 1178.930, -89.084, -862.025, 1351.450, 110.916)
+    AddZone("Linden Side", 2749.900, 943.235, -89.084, 2923.390, 1198.990, 110.916)
+    AddZone("Ocean Docks", 2703.580, -2302.330, -89.084, 2959.350, -2126.900, 110.916)
+    AddZone("Willowfield", 2324.000, -2059.230, -89.084, 2541.700, -1852.870, 110.916)
+    AddZone("King's", -2411.220, 265.243, -9.1, -1993.280, 373.539, 200.000)
+    AddZone("Commerce", 1323.900, -1842.270, -89.084, 1701.900, -1722.260, 110.916)
+    AddZone("Mulholland", 1269.130, -768.027, -89.084, 1414.070, -452.425, 110.916)
+    AddZone("Marina", 647.712, -1804.210, -89.084, 851.449, -1577.590, 110.916)
+    AddZone("Battery Point", -2741.070, 1268.410, -4.5, -2533.040, 1490.470, 200.000)
+    AddZone("The Four Dragons Casino", 1817.390, 863.232, -89.084, 2027.390, 1083.230, 110.916)
+    AddZone("Blackfield", 964.391, 1203.220, -89.084, 1197.390, 1403.220, 110.916)
+    AddZone("Julius Thruway North", 1534.560, 2433.230, -89.084, 1848.400, 2583.230, 110.916)
+    AddZone("Yellow Bell Gol Course", 1117.400, 2723.230, -89.084, 1457.460, 2863.230, 110.916)
+    AddZone("Idlewood", 1812.620, -1602.310, -89.084, 2124.660, -1449.670, 110.916)
+    AddZone("Redsands West", 1297.470, 2142.860, -89.084, 1777.390, 2243.230, 110.916)
+    AddZone("Doherty", -2270.040, -324.114, -1.2, -1794.920, -222.589, 200.000)
+    AddZone("Hilltop Farm", 967.383, -450.390, -3.0, 1176.780, -217.900, 200.000)
+    AddZone("Las Barrancas", -926.130, 1398.730, -3.0, -719.234, 1634.690, 200.000)
+    AddZone("Pirates in Men's Pants", 1817.390, 1469.230, -89.084, 2027.400, 1703.230, 110.916)
+    AddZone("City Hall", -2867.850, 277.411, -9.1, -2593.440, 458.411, 200.000)
+    AddZone("Avispa Country Club", -2646.400, -355.493, 0.000, -2270.040, -222.589, 200.000)
+    AddZone("The Strip", 2027.400, 863.229, -89.084, 2087.390, 1703.230, 110.916)
+    AddZone("Hashbury", -2593.440, -222.589, -1.0, -2411.220, 54.722, 200.000)
+    AddZone("Los Santos International", 1852.000, -2394.330, -89.084, 2089.000, -2179.250, 110.916)
+    AddZone("Whitewood Estates", 1098.310, 1726.220, -89.084, 1197.390, 2243.230, 110.916)
+    AddZone("Sherman Reservoir", -789.737, 1659.680, -89.084, -599.505, 1929.410, 110.916)
+    AddZone("El Corona", 1812.620, -2179.250, -89.084, 1970.620, -1852.870, 110.916)
+    AddZone("Downtown", -1700.010, 744.267, -6.1, -1580.010, 1176.520, 200.000)
+    AddZone("Foster Valley", -2178.690, -1250.970, 0.000, -1794.920, -1115.580, 200.000)
+    AddZone("Las Payasadas", -354.332, 2580.360, 2.0, -133.625, 2816.820, 200.000)
+    AddZone("Valle Ocultado", -936.668, 2611.440, 2.0, -715.961, 2847.900, 200.000)
+    AddZone("Blackfield Intersection", 1166.530, 795.010, -89.084, 1375.600, 1044.690, 110.916)
+    AddZone("Ganton", 2222.560, -1852.870, -89.084, 2632.830, -1722.330, 110.916)
+    AddZone("Easter Bay Airport", -1213.910, -730.118, 0.000, -1132.820, -50.096, 200.000)
+    AddZone("Redsands East", 1817.390, 2011.830, -89.084, 2106.700, 2202.760, 110.916)
+    AddZone("Esplanade East", -1499.890, 578.396, -79.615, -1339.890, 1274.260, 20.385)
+    AddZone("Caligula's Palace", 2087.390, 1543.230, -89.084, 2437.390, 1703.230, 110.916)
+    AddZone("Royal Casino", 2087.390, 1383.230, -89.084, 2437.390, 1543.230, 110.916)
+    AddZone("Richman", 72.648, -1235.070, -89.084, 321.356, -1008.150, 110.916)
+    AddZone("Starfish Casino", 2437.390, 1783.230, -89.084, 2685.160, 2012.180, 110.916)
+    AddZone("Mulholland", 1281.130, -452.425, -89.084, 1641.130, -290.913, 110.916)
+    AddZone("Downtown", -1982.320, 744.170, -6.1, -1871.720, 1274.260, 200.000)
+    AddZone("Hankypanky Point", 2576.920, 62.158, 0.000, 2759.250, 385.503, 200.000)
+    AddZone("K.A.C.C. Military Fuels", 2498.210, 2626.550, -89.084, 2749.900, 2861.550, 110.916)
+    AddZone("Harry Gold Parkway", 1777.390, 863.232, -89.084, 1817.390, 2342.830, 110.916)
+    AddZone("Bayside Tunnel", -2290.190, 2548.290, -89.084, -1950.190, 2723.290, 110.916)
+    AddZone("Ocean Docks", 2324.000, -2302.330, -89.084, 2703.580, -2145.100, 110.916)
+    AddZone("Richman", 321.356, -1044.070, -89.084, 647.557, -860.619, 110.916)
+    AddZone("Randolph Industrial Estate", 1558.090, 596.349, -89.084, 1823.080, 823.235, 110.916)
+    AddZone("East Beach", 2632.830, -1852.870, -89.084, 2959.350, -1668.130, 110.916)
+    AddZone("Flint Water", -314.426, -753.874, -89.084, -106.339, -463.073, 110.916)
+    AddZone("Blueberry", 19.607, -404.136, 3.8, 349.607, -220.137, 200.000)
+    AddZone("Linden Station", 2749.900, 1198.990, -89.084, 2923.390, 1548.990, 110.916)
+    AddZone("Glen Park", 1812.620, -1350.720, -89.084, 2056.860, -1100.820, 110.916)
+    AddZone("Downtown", -1993.280, 265.243, -9.1, -1794.920, 578.396, 200.000)
+    AddZone("Redsands West", 1377.390, 2243.230, -89.084, 1704.590, 2433.230, 110.916)
+    AddZone("Richman", 321.356, -1235.070, -89.084, 647.522, -1044.070, 110.916)
+    AddZone("Gant Bridge", -2741.450, 1659.680, -6.1, -2616.400, 2175.150, 200.000)
+    AddZone("Lil' Probe Inn", -90.218, 1286.850, -3.0, 153.859, 1554.120, 200.000)
+    AddZone("Flint Intersection", -187.700, -1596.760, -89.084, 17.063, -1276.600, 110.916)
+    AddZone("Las Colinas", 2281.450, -1135.040, -89.084, 2632.740, -945.035, 110.916)
+    AddZone("Sobell Rail Yards", 2749.900, 1548.990, -89.084, 2923.390, 1937.250, 110.916)
+    AddZone("The Emerald Isle", 2011.940, 2202.760, -89.084, 2237.400, 2508.230, 110.916)
+    AddZone("El Castillo del Diablo", -208.570, 2123.010, -7.6, 114.033, 2337.180, 200.000)
+    AddZone("Santa Flora", -2741.070, 458.411, -7.6, -2533.040, 793.411, 200.000)
+    AddZone("Playa del Seville", 2703.580, -2126.900, -89.084, 2959.350, -1852.870, 110.916)
+    AddZone("Market", 926.922, -1577.590, -89.084, 1370.850, -1416.250, 110.916)
+    AddZone("Queens", -2593.440, 54.722, 0.000, -2411.220, 458.411, 200.000)
+    AddZone("Pilson Intersection", 1098.390, 2243.230, -89.084, 1377.390, 2507.230, 110.916)
+    AddZone("Spinybed", 2121.400, 2663.170, -89.084, 2498.210, 2861.550, 110.916)
+    AddZone("Pilgrim", 2437.390, 1383.230, -89.084, 2624.400, 1783.230, 110.916)
+    AddZone("Blackfield", 964.391, 1403.220, -89.084, 1197.390, 1726.220, 110.916)
+    AddZone("'The Big Ear'", -410.020, 1403.340, -3.0, -137.969, 1681.230, 200.000)
+    AddZone("Dillimore", 580.794, -674.885, -9.5, 861.085, -404.790, 200.000)
+    AddZone("El Quebrados", -1645.230, 2498.520, 0.000, -1372.140, 2777.850, 200.000)
+    AddZone("Esplanade North", -2533.040, 1358.900, -4.5, -1996.660, 1501.210, 200.000)
+    AddZone("Easter Bay Airport", -1499.890, -50.096, -1.0, -1242.980, 249.904, 200.000)
+    AddZone("Fisher's Lagoon", 1916.990, -233.323, -100.000, 2131.720, 13.800, 200.000)
+    AddZone("Mulholland", 1414.070, -768.027, -89.084, 1667.610, -452.425, 110.916)
+    AddZone("East Beach", 2747.740, -1498.620, -89.084, 2959.350, -1120.040, 110.916)
+    AddZone("San Andreas Sound", 2450.390, 385.503, -100.000, 2759.250, 562.349, 200.000)
+    AddZone("Shady Creeks", -2030.120, -2174.890, -6.1, -1820.640, -1771.660, 200.000)
+    AddZone("Market", 1072.660, -1416.250, -89.084, 1370.850, -1130.850, 110.916)
+    AddZone("Rockshore West", 1997.220, 596.349, -89.084, 2377.390, 823.228, 110.916)
+    AddZone("Prickle Pine", 1534.560, 2583.230, -89.084, 1848.400, 2863.230, 110.916)
+    AddZone("Easter Basin", -1794.920, -50.096, -1.04, -1499.890, 249.904, 200.000)
+    AddZone("Leafy Hollow", -1166.970, -1856.030, 0.000, -815.624, -1602.070, 200.000)
+    AddZone("LVA Freight Depot", 1457.390, 863.229, -89.084, 1777.400, 1143.210, 110.916)
+    AddZone("Prickle Pine", 1117.400, 2507.230, -89.084, 1534.560, 2723.230, 110.916)
+    AddZone("Blueberry", 104.534, -220.137, 2.3, 349.607, 152.236, 200.000)
+    AddZone("El Castillo del Diablo", -464.515, 2217.680, 0.000, -208.570, 2580.360, 200.000)
+    AddZone("Downtown", -2078.670, 578.396, -7.6, -1499.890, 744.267, 200.000)
+    AddZone("Rockshore East", 2537.390, 676.549, -89.084, 2902.350, 943.235, 110.916)
+    AddZone("San Fierro Bay", -2616.400, 1501.210, -3.0, -1996.660, 1659.680, 200.000)
+    AddZone("Paradiso", -2741.070, 793.411, -6.1, -2533.040, 1268.410, 200.000)
+    AddZone("The Camel's Toe", 2087.390, 1203.230, -89.084, 2640.400, 1383.230, 110.916)
+    AddZone("Old Venturas Strip", 2162.390, 2012.180, -89.084, 2685.160, 2202.760, 110.916)
+    AddZone("Juniper Hill", -2533.040, 578.396, -7.6, -2274.170, 968.369, 200.000)
+    AddZone("Juniper Hollow", -2533.040, 968.369, -6.1, -2274.170, 1358.900, 200.000)
+    AddZone("Roca Escalante", 2237.400, 2202.760, -89.084, 2536.430, 2542.550, 110.916)
+    AddZone("Julius Thruway East", 2685.160, 1055.960, -89.084, 2749.900, 2626.550, 110.916)
+    AddZone("Verona Beach", 647.712, -2173.290, -89.084, 930.221, -1804.210, 110.916)
+    AddZone("Foster Valley", -2178.690, -599.884, -1.2, -1794.920, -324.114, 200.000)
+    AddZone("Arco del Oeste", -901.129, 2221.860, 0.000, -592.090, 2571.970, 200.000)
+    AddZone("Fallen Tree", -792.254, -698.555, -5.3, -452.404, -380.043, 200.000)
+    AddZone("The Farm", -1209.670, -1317.100, 114.981, -908.161, -787.391, 251.981)
+    AddZone("The Sherman Dam", -968.772, 1929.410, -3.0, -481.126, 2155.260, 200.000)
+    AddZone("Esplanade North", -1996.660, 1358.900, -4.5, -1524.240, 1592.510, 200.000)
+    AddZone("Financial", -1871.720, 744.170, -6.1, -1701.300, 1176.420, 300.000)
+    AddZone("Garcia", -2411.220, -222.589, -1.14, -2173.040, 265.243, 200.000)
+    AddZone("Montgomery", 1119.510, 119.526, -3.0, 1451.400, 493.323, 200.000)
+    AddZone("Creek", 2749.900, 1937.250, -89.084, 2921.620, 2669.790, 110.916)
+    AddZone("Los Santos International", 1249.620, -2394.330, -89.084, 1852.000, -2179.250, 110.916)
+    AddZone("Santa Maria Beach", 72.648, -2173.290, -89.084, 342.648, -1684.650, 110.916)
+    AddZone("Mulholland Intersection", 1463.900, -1150.870, -89.084, 1812.620, -768.027, 110.916)
+    AddZone("Angel Pine", -2324.940, -2584.290, -6.1, -1964.220, -2212.110, 200.000)
+    AddZone("Verdant Meadows", 37.032, 2337.180, -3.0, 435.988, 2677.900, 200.000)
+    AddZone("Octane Springs", 338.658, 1228.510, 0.000, 664.308, 1655.050, 200.000)
+    AddZone("Come-A-Lot", 2087.390, 943.235, -89.084, 2623.180, 1203.230, 110.916)
+    AddZone("Redsands West", 1236.630, 1883.110, -89.084, 1777.390, 2142.860, 110.916)
+    AddZone("Santa Maria Beach", 342.648, -2173.290, -89.084, 647.712, -1684.650, 110.916)
+    AddZone("Verdant Bluffs", 1249.620, -2179.250, -89.084, 1692.620, -1842.270, 110.916)
+    AddZone("Las Venturas Airport", 1236.630, 1203.280, -89.084, 1457.370, 1883.110, 110.916)
+    AddZone("Flint Range", -594.191, -1648.550, 0.000, -187.700, -1276.600, 200.000)
+    AddZone("Verdant Bluffs", 930.221, -2488.420, -89.084, 1249.620, -2006.780, 110.916)
+    AddZone("Palomino Creek", 2160.220, -149.004, 0.000, 2576.920, 228.322, 200.000)
+    AddZone("Ocean Docks", 2373.770, -2697.090, -89.084, 2809.220, -2330.460, 110.916)
+    AddZone("Easter Bay Airport", -1213.910, -50.096, -4.5, -947.980, 578.396, 200.000)
+    AddZone("Whitewood Estates", 883.308, 1726.220, -89.084, 1098.310, 2507.230, 110.916)
+    AddZone("Calton Heights", -2274.170, 744.170, -6.1, -1982.320, 1358.900, 200.000)
+    AddZone("Easter Basin", -1794.920, 249.904, -9.1, -1242.980, 578.396, 200.000)
+    AddZone("Los Santos Inlet", -321.744, -2224.430, -89.084, 44.615, -1724.430, 110.916)
+    AddZone("Doherty", -2173.040, -222.589, -1.0, -1794.920, 265.243, 200.000)
+    AddZone("Mount Chiliad", -2178.690, -2189.910, -47.917, -2030.120, -1771.660, 576.083)
+    AddZone("Fort Carson", -376.233, 826.326, -3.0, 123.717, 1220.440, 200.000)
+    AddZone("Foster Valley", -2178.690, -1115.580, 0.000, -1794.920, -599.884, 200.000)
+    AddZone("Ocean Flats", -2994.490, -222.589, -1.0, -2593.440, 277.411, 200.000)
+    AddZone("Fern Ridge", 508.189, -139.259, 0.000, 1306.660, 119.526, 200.000)
+    AddZone("Bayside", -2741.070, 2175.150, 0.000, -2353.170, 2722.790, 200.000)
+    AddZone("Las Venturas Airport", 1457.370, 1203.280, -89.084, 1777.390, 1883.110, 110.916)
+    AddZone("Blueberry Acres", -319.676, -220.137, 0.000, 104.534, 293.324, 200.000)
+    AddZone("Palisades", -2994.490, 458.411, -6.1, -2741.070, 1339.610, 200.000)
+    AddZone("North Rock", 2285.370, -768.027, 0.000, 2770.590, -269.740, 200.000)
+    AddZone("Hunter Quarry", 337.244, 710.840, -115.239, 860.554, 1031.710, 203.761)
+    AddZone("Los Santos International", 1382.730, -2730.880, -89.084, 2201.820, -2394.330, 110.916)
+    AddZone("Missionary Hill", -2994.490, -811.276, 0.000, -2178.690, -430.276, 200.000)
+    AddZone("San Fierro Bay", -2616.400, 1659.680, -3.0, -1996.660, 2175.150, 200.000)
+    AddZone("Restricted Area", -91.586, 1655.050, -50.000, 421.234, 2123.010, 250.000)
+    AddZone("Mount Chiliad", -2997.470, -1115.580, -47.917, -2178.690, -971.913, 576.083)
+    AddZone("Mount Chiliad", -2178.690, -1771.660, -47.917, -1936.120, -1250.970, 576.083)
+    AddZone("Easter Bay Airport", -1794.920, -730.118, -3.0, -1213.910, -50.096, 200.000)
+    AddZone("The Panopticon", -947.980, -304.320, -1.1, -319.676, 327.071, 200.000)
+    AddZone("Shady Creeks", -1820.640, -2643.680, -8.0, -1226.780, -1771.660, 200.000)
+    AddZone("Back o Beyond", -1166.970, -2641.190, 0.000, -321.744, -1856.030, 200.000)
+    AddZone("Mount Chiliad", -2994.490, -2189.910, -47.917, -2178.690, -1115.580, 576.083)
+    AddZone("Tierra Robada", -1213.910, 596.349, -242.990, -480.539, 1659.680, 900.000)
+    AddZone("Flint County", -1213.910, -2892.970, -242.990, 44.615, -768.027, 900.000)
+    AddZone("Whetstone", -2997.470, -2892.970, -242.990, -1213.910, -1115.580, 900.000)
+    AddZone("Bone County", -480.539, 596.349, -242.990, 869.461, 2993.870, 900.000)
+    AddZone("Tierra Robada", -2997.470, 1659.680, -242.990, -480.539, 2993.870, 900.000)
+    AddZone("San Fierro", -2997.470, -1115.580, -242.990, -1213.910, 1659.680, 900.000)
+    AddZone("Las Venturas", 869.461, 596.349, -242.990, 2997.060, 2993.870, 900.000)
+    AddZone("Red County", -1213.910, -768.027, -242.990, 2997.060, 596.349, 900.000)
+    AddZone("Los Santos", 44.615, -2892.970, -242.990, 2997.060, -768.027, 900.000)
+}
+calculateZone(posX, posY, posZ) {
+    if ( bInitZaC == 0 )
+    {
+        initZonesAndCities()
+        bInitZaC := 1
+    }
+    Loop % nZone-1
+    {
+        if (posX >= zone%A_Index%_x1) && (posY >= zone%A_Index%_y1) && (posZ >= zone%A_Index%_z1) && (posX <= zone%A_Index%_x2) && (posY <= zone%A_Index%_y2) && (posZ <= zone%A_Index%_z2)
+        {
+            ErrorLevel := ERROR_OK
+            return zone%A_Index%_name
+        }
+    }
+    ErrorLevel := ERROR_ZONE_NOT_FOUND
+    return "Неизвестно"
+}
+calculateCity(posX, posY, posZ) {
+    if ( bInitZaC == 0 )
+    {
+        initZonesAndCities()
+        bInitZaC := 1
+    }
+    smallestCity := "Неизвестно"
+    currentCitySize := 0
+    smallestCitySize := 0
+    Loop % nCity-1
+    {
+        if (posX >= city%A_Index%_x1) && (posY >= city%A_Index%_y1) && (posZ >= city%A_Index%_z1) && (posX <= city%A_Index%_x2) && (posY <= city%A_Index%_y2) && (posZ <= city%A_Index%_z2)
+        {
+            currentCitySize := ((city%A_Index%_x2 - city%A_Index%_x1) * (city%A_Index%_y2 - city%A_Index%_y1) * (city%A_Index%_z2 - city%A_Index%_z1))
+            if (smallestCity == "Неизвестно") || (currentCitySize < smallestCitySize)
+            {
+                smallestCity := city%A_Index%_name
+                smallestCitySize := currentCitySize
+            }
+        }
+    }
+    if(smallestCity == "Неизвестно") {
+        ErrorLevel := ERROR_CITY_NOT_FOUND
+    } else {
+        ErrorLevel := ERROR_OK
+    }
+    return smallestCity
+}
+AddZone(sName, x1, y1, z1, x2, y2, z2) {
+    global
+    zone%nZone%_name := sName
+    zone%nZone%_x1 := x1
+    zone%nZone%_y1 := y1
+    zone%nZone%_z1 := z1
+    zone%nZone%_x2 := x2
+    zone%nZone%_y2 := y2
+    zone%nZone%_z2 := z2
+    nZone := nZone + 1
+}
+AddCity(sName, x1, y1, z1, x2, y2, z2) {
+    global
+    city%nCity%_name := sName
+    city%nCity%_x1 := x1
+    city%nCity%_y1 := y1
+    city%nCity%_z1 := z1
+    city%nCity%_x2 := x2
+    city%nCity%_y2 := y2
+    city%nCity%_z2 := z2
+    nCity := nCity + 1
+}
+IsPlayerInRangeOfPoint(_posX, _posY, _posZ, _posRadius)
+{
+    GetPlayerPos(posX, posY, posZ)
+    X := posX -_posX
+    Y := posY -_posY
+    Z := posZ -_posZ
+    if(((X < _posRadius) && (X > -_posRadius)) && ((Y < _posRadius) && (Y > -_posRadius)) && ((Z < _posRadius) && (Z > -_posRadius)))
+    return TRUE
+    return FALSE
+}
+IsPlayerInRangeOfPoint2D(_posX, _posY, _posRadius)
+{
+    GetPlayerPos(posX, posY, posZ)
+    X := posX - _posX
+    Y := posY - _posY
+    if(((X < _posRadius) && (X > -_posRadius)) && ((Y < _posRadius) && (Y > -_posRadius)))
+    return TRUE
+    return FALSE
+}
+getPlayerZone()
+{
+    aktPos := getCoordinates()
+    return calculateZone(aktPos[1], aktPos[2], aktPos[3])
+}
+getPlayerCity()
+{
+    aktPos := getCoordinates()
+    return calculateCity(aktPos[1], aktPos[2], aktPos[3])
+}
+AntiCrash(){
+    If(!checkHandles())
+    return false
+    cReport := ADDR_SAMP_CRASHREPORT
+    writeMemory(hGTA, dwSAMP + cReport, 0x90909090, 4)
+    cReport += 0x4
+    writeMemory(hGTA, dwSAMP + cReport, 0x90, 1)
+    cReport += 0x9
+    writeMemory(hGTA, dwSAMP + cReport, 0x90909090, 4)
+    cReport += 0x4
+    writeMemory(hGTA, dwSAMP + cReport, 0x90, 1)
+}
+writeMemory(hProcess,address,writevalue,length=4, datatype="int") {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return false
+    }
+    VarSetCapacity(finalvalue,length, 0)
+    NumPut(writevalue,finalvalue,0,datatype)
+    dwRet :=  DllCall(  "WriteProcessMemory"
+    ,"Uint",hProcess
+    ,"Uint",address
+    ,"Uint",&finalvalue
+    ,"Uint",length
+    ,"Uint",0)
+    if(dwRet == 0) {
+        ErrorLevel := ERROR_WRITE_MEMORY
+        return false
+    }
+    ErrorLevel := ERROR_OK
+    return true
+}
+checkHandles() {
+    if(iRefreshHandles+500>A_TickCount)
+    return true
+    iRefreshHandles:=A_TickCount
+    if(!refreshGTA() || !refreshSAMP() || !refreshMemory()) {
+        return false
+    } else {
+        return true
+    }
+    return true
+}
+refreshGTA() {
+    newPID := getPID("GTA:SA:MP")
+    if(!newPID) {
+        if(hGTA) {
+            virtualFreeEx(hGTA, pMemory, 0, 0x8000)
+            closeProcess(hGTA)
+            hGTA := 0x0
+        }
+        dwGTAPID := 0
+        hGTA := 0x0
+        dwSAMP := 0x0
+        pMemory := 0x0
+        return false
+    }
+    if(!hGTA || (dwGTAPID != newPID)) {
+        hGTA := openProcess(newPID)
+        if(ErrorLevel) {
+            dwGTAPID := 0
+            hGTA := 0x0
+            dwSAMP := 0x0
+            pMemory := 0x0
+            return false
+        }
+        dwGTAPID := newPID
+        dwSAMP := 0x0
+        pMemory := 0x0
+        return true
+    }
+    return true
+}
+refreshSAMP() {
+    if(dwSAMP)
+    return true
+    dwSAMP := getModuleBaseAddress("samp.dll", hGTA)
+    if(!dwSAMP)
+    return false
+    return true
+}
+refreshMemory() {
+    if(!pMemory) {
+        pMemory     := virtualAllocEx(hGTA, 6144, 0x1000 | 0x2000, 0x40)
+        if(ErrorLevel) {
+            pMemory := 0x0
+            return false
+        }
+        pParam1     := pMemory
+        pParam2     := pMemory + 1024
+        pParam3     := pMemory + 2048
+        pParam4     := pMemory + 3072
+        pParam5     := pMemory + 4096
+        pInjectFunc := pMemory + 5120
+    }
+    return true
+}
+getPID(szWindow) {
+    local dwPID := 0
+    WinGet, dwPID, PID, %szWindow%
+    return dwPID
+}
+openProcess(dwPID, dwRights = 0x1F0FFF) {
+    hProcess := DllCall("OpenProcess"
+    , "UInt", dwRights
+    , "int",  0
+    , "UInt", dwPID
+    , "Uint")
+    if(hProcess == 0) {
+        ErrorLevel := ERROR_OPEN_PROCESS
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return hProcess
+}
+closeProcess(hProcess) {
+    if(hProcess == 0) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    dwRet := DllCall(    "CloseHandle"
+    , "Uint", hProcess
+    , "UInt")
+    ErrorLevel := ERROR_OK
+}
+getModuleBaseAddress(sModule, hProcess) {
+    if(!sModule) {
+        ErrorLevel := ERROR_MODULE_NOT_FOUND
+        return 0
+    }
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    dwSize = 1024*4
+    VarSetCapacity(hMods, dwSize)
+    VarSetCapacity(cbNeeded, 4)
+    dwRet := DllCall(    "Psapi.dll\EnumProcessModules"
+    , "UInt", hProcess
+    , "UInt", &hMods
+    , "UInt", dwSize
+    , "UInt*", cbNeeded
+    , "UInt")
+    if(dwRet == 0) {
+        ErrorLevel := ERROR_ENUM_PROCESS_MODULES
+        return 0
+    }
+    dwMods := cbNeeded / 4
+    i := 0
+    VarSetCapacity(hModule, 4)
+    VarSetCapacity(sCurModule, 260)
+    while(i < dwMods) {
+        hModule := NumGet(hMods, i*4)
+        DllCall("Psapi.dll\GetModuleFileNameEx"
+        , "UInt", hProcess
+        , "UInt", hModule
+        , "Str", sCurModule
+        , "UInt", 260)
+        SplitPath, sCurModule, sFilename
+        if(sModule == sFilename) {
+            ErrorLevel := ERROR_OK
+            return hModule
+        }
+        i := i + 1
+    }
+    ErrorLevel := ERROR_MODULE_NOT_FOUND
+    return 0
+}
+readString(hProcess, dwAddress, dwLen) {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    VarSetCapacity(sRead, dwLen)
+    dwRet := DllCall(    "ReadProcessMemory"
+    , "UInt", hProcess
+    , "UInt", dwAddress
+    , "Str", sRead
+    , "UInt", dwLen
+    , "UInt*", 0
+    , "UInt")
+    if(dwRet == 0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    if A_IsUnicode
+    return __ansiToUnicode(sRead)
+    return sRead
+}
+readFloat(hProcess, dwAddress) {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    VarSetCapacity(dwRead, 4)
+    dwRet := DllCall(    "ReadProcessMemory"
+    , "UInt",  hProcess
+    , "UInt",  dwAddress
+    , "Str",   dwRead
+    , "UInt",  4
+    , "UInt*", 0
+    , "UInt")
+    if(dwRet == 0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return NumGet(dwRead, 0, "Float")
+}
+readDWORD(hProcess, dwAddress) {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    VarSetCapacity(dwRead, 4)
+    dwRet := DllCall(    "ReadProcessMemory"
+    , "UInt",  hProcess
+    , "UInt",  dwAddress
+    , "Str",   dwRead
+    , "UInt",  4
+    , "UInt*", 0)
+    if(dwRet == 0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return NumGet(dwRead, 0, "UInt")
+}
+readMem(hProcess, dwAddress, dwLen=4, type="UInt") {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    VarSetCapacity(dwRead, dwLen)
+    dwRet := DllCall(    "ReadProcessMemory"
+    , "UInt",  hProcess
+    , "UInt",  dwAddress
+    , "Str",   dwRead
+    , "UInt",  dwLen
+    , "UInt*", 0)
+    if(dwRet == 0) {
+        ErrorLevel := ERROR_READ_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return NumGet(dwRead, 0, type)
+}
+writeString(hProcess, dwAddress, wString) {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return false
+    }
+    sString := wString
+    if A_IsUnicode
+    sString := __unicodeToAnsi(wString)
+    dwRet := DllCall(    "WriteProcessMemory"
+    , "UInt", hProcess
+    , "UInt", dwAddress
+    , "Str", sString
+    , "UInt", StrLen(wString) + 1
+    , "UInt", 0
+    , "UInt")
+    if(dwRet == 0) {
+        ErrorLEvel := ERROR_WRITE_MEMORY
+        return false
+    }
+    ErrorLevel := ERROR_OK
+    return true
+}
+writeRaw(hProcess, dwAddress, pBuffer, dwLen) {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return false
+    }
+    dwRet := DllCall(    "WriteProcessMemory"
+    , "UInt", hProcess
+    , "UInt", dwAddress
+    , "UInt", pBuffer
+    , "UInt", dwLen
+    , "UInt", 0
+    , "UInt")
+    if(dwRet == 0) {
+        ErrorLEvel := ERROR_WRITE_MEMORY
+        return false
+    }
+    ErrorLevel := ERROR_OK
+    return true
+}
+Memory_ReadByte(process_handle, address) {
+    VarSetCapacity(value, 1, 0)
+    DllCall("ReadProcessMemory", "UInt", process_handle, "UInt", address, "Str", value, "UInt", 1, "UInt *", 0)
+    return, NumGet(value, 0, "Byte")
+}
+callWithParams(hProcess, dwFunc, aParams, bCleanupStack = true) {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return false
+    }
+    validParams := 0
+    i := aParams.MaxIndex()
+    dwLen := i * 5    + 5    + 1
+    if(bCleanupStack)
+    dwLen += 3
+    VarSetCapacity(injectData, i * 5    + 5       + 3       + 1, 0)
+    i_ := 1
+    while(i > 0) {
+        if(aParams[i][1] != "") {
+            dwMemAddress := 0x0
+            if(aParams[i][1] == "p") {
+                dwMemAddress := aParams[i][2]
+            } else if(aParams[i][1] == "s") {
+                if(i_>3)
+                return false
+                dwMemAddress := pParam%i_%
+                writeString(hProcess, dwMemAddress, aParams[i][2])
+                if(ErrorLevel)
+                return false
+                i_ += 1
+            } else if(aParams[i][1] == "i") {
+                dwMemAddress := aParams[i][2]
+            } else {
+                return false
+            }
+            NumPut(0x68, injectData, validParams * 5, "UChar")
+            NumPut(dwMemAddress, injectData, validParams * 5 + 1, "UInt")
+            validParams += 1
+        }
+        i -= 1
+    }
+    offset := dwFunc - ( pInjectFunc + validParams * 5 + 5 )
+    NumPut(0xE8, injectData, validParams * 5, "UChar")
+    NumPut(offset, injectData, validParams * 5 + 1, "Int")
+    if(bCleanupStack) {
+        NumPut(0xC483, injectData, validParams * 5 + 5, "UShort")
+        NumPut(validParams*4, injectData, validParams * 5 + 7, "UChar")
+        NumPut(0xC3, injectData, validParams * 5 + 8, "UChar")
+    } else {
+        NumPut(0xC3, injectData, validParams * 5 + 5, "UChar")
+    }
+    writeRaw(hGTA, pInjectFunc, &injectData, dwLen)
+    if(ErrorLevel)
+    return false
+    hThread := createRemoteThread(hGTA, 0, 0, pInjectFunc, 0, 0, 0)
+    if(ErrorLevel)
+    return false
+    waitForSingleObject(hThread, 0xFFFFFFFF)
+    closeProcess(hThread)
+    return true
+}
+virtualAllocEx(hProcess, dwSize, flAllocationType, flProtect) {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    dwRet := DllCall(    "VirtualAllocEx"
+    , "UInt", hProcess
+    , "UInt", 0
+    , "UInt", dwSize
+    , "UInt", flAllocationType
+    , "UInt", flProtect
+    , "UInt")
+    if(dwRet == 0) {
+        ErrorLEvel := ERROR_ALLOC_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return dwRet
+}
+virtualFreeEx(hProcess, lpAddress, dwSize, dwFreeType) {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    dwRet := DllCall(    "VirtualFreeEx"
+    , "UInt", hProcess
+    , "UInt", lpAddress
+    , "UInt", dwSize
+    , "UInt", dwFreeType
+    , "UInt")
+    if(dwRet == 0) {
+        ErrorLEvel := ERROR_FREE_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return dwRet
+}
+createRemoteThread(hProcess, lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId) {
+    if(!hProcess) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    dwRet := DllCall(    "CreateRemoteThread"
+    , "UInt", hProcess
+    , "UInt", lpThreadAttributes
+    , "UInt", dwStackSize
+    , "UInt", lpStartAddress
+    , "UInt", lpParameter
+    , "UInt", dwCreationFlags
+    , "UInt", lpThreadId
+    , "UInt")
+    if(dwRet == 0) {
+        ErrorLEvel := ERROR_ALLOC_MEMORY
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return dwRet
+}
+waitForSingleObject(hThread, dwMilliseconds) {
+    if(!hThread) {
+        ErrorLevel := ERROR_INVALID_HANDLE
+        return 0
+    }
+    dwRet := DllCall(    "WaitForSingleObject"
+    , "UInt", hThread
+    , "UInt", dwMilliseconds
+    , "UInt")
+    if(dwRet == 0xFFFFFFFF) {
+        ErrorLEvel := ERROR_WAIT_FOR_OBJECT
+        return 0
+    }
+    ErrorLevel := ERROR_OK
+    return dwRet
+}
+__ansiToUnicode(sString, nLen = 0) {
+    If !nLen
+    {
+        nLen := DllCall("MultiByteToWideChar"
+        , "Uint", 0
+        , "Uint", 0
+        , "Uint", &sString
+        , "int",  -1
+        , "Uint", 0
+        , "int",  0)
+    }
+    VarSetCapacity(wString, nLen * 2)
+    DllCall("MultiByteToWideChar"
+    , "Uint", 0
+    , "Uint", 0
+    , "Uint", &sString
+    , "int",  -1
+    , "Uint", &wString
+    , "int",  nLen)
+    return wString
+}
+__unicodeToAnsi(wString, nLen = 0) {
+    pString := wString + 1 > 65536 ? wString : &wString
+    If !nLen
+    {
+        nLen := DllCall("WideCharToMultiByte"
+        , "Uint", 0
+        , "Uint", 0
+        , "Uint", pString
+        , "int",  -1
+        , "Uint", 0
+        , "int",  0
+        , "Uint", 0
+        , "Uint", 0)
+    }
+    VarSetCapacity(sString, nLen)
+    DllCall("WideCharToMultiByte"
+    , "Uint", 0
+    , "Uint", 0
+    , "Uint", pString
+    , "int",  -1
+    , "str",  sString
+    , "int",  nLen
+    , "Uint", 0
+    , "Uint", 0)
+    return sString
+}
+#IfWinActive GTA:SA:MP
+#SingleInstance Force
+DIR = %A_MyDocuments%\GTA San Andreas User Files\Mafia by Gamrik\
+FileCreateDir, %DIR%
+DIRSETTING = %DIR%\Settings.ini
+Version = 0.1
+FileDelete, %Dir%\VersionMafia.txt
+FileDelete, %A_Temp%\VersionMafia.txt
+FileDelete, %A_Temp%\DirMafia.txt
+FileAppend, %Version%, %Dir%\VersionMafia.txt
+FileAppend,, %A_Temp%\VersionMafia.txt
+URLDownloadToFile, https://raw.githubusercontent.com/Anton00756/AHK/master/VersionMafia.txt, %A_Temp%\VersionMafia.txt
+FileRead, readver1, %Dir%\VersionMafia.txt
+FileRead, readver2, %A_Temp%\VersionMafia.txt
+if (readver1 < readver2)
+{
+    MsgBox, , Mafia AHK by Gamrik, Вышла новая версия AHK! Мы ее загружаем!
+    FileAppend, %A_ScriptDir%, %A_Temp%\DirMafia.txt
+    URLDownloadToFile, https://raw.githubusercontent.com/Anton00756/AHK/master/UpdateMafia.exe, %DIR%\UpdateMafia.exe
+    Run, %DIR%UpdateMafia.exe
+    ExitApp
+}
+SetTimer, TakeGun, 2000
+SetTimer, UnloadGun, 2000
+SetTimer, Zarplatka, 30000
+KolvoBomb := 0
+TextStroi := ""
+ProvStroi := 0
+IniRead, Name, %DIRSETTING%, Player, Name
+If (Name = "ERROR")
+{
+    FileAppend,, %DIR%\BlackList.txt
+    IniWrite, "", %DIRSETTING%, Player, Name
+    IniWrite, "", %DIRSETTING%, Player, Name1
+    IniWrite, "", %DIRSETTING%, Player, Org
+    IniWrite, "", %DIRSETTING%, Player, Role
+    IniWrite, "", %DIRSETTING%, Player, Numb
+    IniWrite, "", %DIRSETTING%, Player, TegF
+    IniWrite, "", %DIRSETTING%, Player, Pol
+    IniWrite, "", %DIRSETTING%, Addv, Str1
+    IniWrite, "", %DIRSETTING%, Addv, Str2
+    IniWrite, "", %DIRSETTING%, Addv, Str3
+    IniWrite, "", %DIRSETTING%, Addv, Str4
+    IniWrite, "", %DIRSETTING%, Addv, Str5
+    IniWrite, "", %DIRSETTING%, Addv, Str6
+    IniWrite, "", %DIRSETTING%, Addv, Str7
+    IniWrite, "", %DIRSETTING%, Addv, Str8
+    IniWrite, "", %DIRSETTING%, Addv, Str9
+    IniWrite, "", %DIRSETTING%, Dop, Ammo
+    IniWrite, "", %DIRSETTING%, Dop, Dostor
+    IniWrite, "", %DIRSETTING%, Dop, Masker
+    IniWrite, "", %DIRSETTING%, Dop, Healmer
+    IniWrite, "", %DIRSETTING%, Dop, Finder
+    IniWrite, "", %DIRSETTING%, Dop, Zarpl
+    IniWrite, "", %DIRSETTING%, Dop, Racia
+    IniWrite, "", %DIRSETTING%, Dop, FSTime
+    IniWrite, "", %DIRSETTING%, Dop, FSTimeP
+    IniWrite, "", %DIRSETTING%, Dop, TSTimeP
+    IniWrite, "", %DIRSETTING%, Dop, InviteS
+    IniWrite, "", %DIRSETTING%, Dop, UninviteS
+    Reload
+}
+IniRead, Name1, %DIRSETTING%, Player, Name1
+IniRead, Org, %DIRSETTING%, Player, Org
+IniRead, Role, %DIRSETTING%, Player, Role
+IniRead, Numb, %DIRSETTING%, Player, Numb
+IniRead, TegF, %DIRSETTING%, Player, TegF
+IniRead, Pol, %DIRSETTING%, Player, Pol
+IniRead, Str1, %DIRSETTING%, Addv, Str1
+IniRead, Str2, %DIRSETTING%, Addv, Str2
+IniRead, Str3, %DIRSETTING%, Addv, Str3
+IniRead, Str4, %DIRSETTING%, Addv, Str4
+IniRead, Str5, %DIRSETTING%, Addv, Str5
+IniRead, Str6, %DIRSETTING%, Addv, Str6
+IniRead, Str7, %DIRSETTING%, Addv, Str7
+IniRead, Str8, %DIRSETTING%, Addv, Str8
+IniRead, Str9, %DIRSETTING%, Addv, Str9
+IniRead, Ammo, %DIRSETTING%, Dop, Ammo
+IniRead, Dostor, %DIRSETTING%, Dop, Dostor
+IniRead, Masker, %DIRSETTING%, Dop, Masker
+IniRead, Healmer, %DIRSETTING%, Dop, Healmer
+IniRead, Finder, %DIRSETTING%, Dop, Finder
+IniRead, Zarpl, %DIRSETTING%, Dop, Zarpl
+IniRead, Racia, %DIRSETTING%, Dop, Racia
+IniRead, FSTime, %DIRSETTING%, Dop, FSTime
+IniRead, FSTimeP, %DIRSETTING%, Dop, FSTimeP
+IniRead, TSTimeP, %DIRSETTING%, Dop, TSTimeP
+IniRead, InviteS, %DIRSETTING%, Dop, InviteS
+IniRead, UninviteS, %DIRSETTING%, Dop, UninviteS
+IniRead, Key1, %DIRSETTING%, IniKey, Key1
+IniRead, Key2, %DIRSETTING%, IniKey, Key2
+IniRead, Key3, %DIRSETTING%, IniKey, Key3
+IniRead, Key4, %DIRSETTING%, IniKey, Key4
+IniRead, Key5, %DIRSETTING%, IniKey, Key5
+IniRead, Key6, %DIRSETTING%, IniKey, Key6
+IniRead, Key7, %DIRSETTING%, IniKey, Key7
+IniRead, Key8, %DIRSETTING%, IniKey, Key8
+Gui, Add, Tab2, x2 y-1 w500 h400 , Данные|Объявления|Клавиши|Другое
+Gui, Tab, Данные
+Gui, Add, Button, x162 y330 w150 h30 gGlavKey, Сохранить
+Gui, Add, Text, x162 y360 w150 h30 , В игре: /ahelp 1 | /ahelp 2
+Gui, Add, Text, x22 y20 w170 h30 , Ник (Без _)
+Gui, Add, Text, x22 y50 w170 h30 , Короткое имя
+Gui, Add, Text, x22 y80 w170 h30 , Организация
+Gui, Add, Text, x22 y140 w170 h30 , Должность
+Gui, Add, Text, x22 y170 w170 h30 , Номер
+Gui, Add, Text, x22 y200 w170 h30 , Тэг /f
+Gui, Add, Text, x22 y260 w170 h30 , Пол (Boy/Girl)
+Gui, Add, Edit, x232 y20 w230 h20 vName, %Name%
+Gui, Add, Edit, x232 y50 w230 h20 vName1, %Name1%
+Gui, Add, Edit, x232 y80 w230 h20 vOrg, %Org%
+Gui, Add, Edit, x232 y140 w230 h20 vRole, %Role%
+Gui, Add, Edit, x232 y170 w230 h20 vNumb, %Numb%
+Gui, Add, Edit, x232 y200 w230 h20 vTegF, %TegF%
+Gui, Add, Edit, x232 y260 w230 h20 vPol, %Pol%
+Gui, Tab, Объявления
+Gui, Add, Button, x162 y339 w150 h30 gGlavKey, Сохранить
+Gui, Add, Text, x12 y20 w100 h20 , Строка 1
+Gui, Add, Text, x12 y50 w100 h20 , Строка 2
+Gui, Add, Text, x12 y80 w100 h20 , Строка 3
+Gui, Add, Text, x12 y140 w100 h20 , Строка 1
+Gui, Add, Text, x12 y170 w100 h20 , Строка 2
+Gui, Add, Text, x12 y200 w100 h20 , Строка 3
+Gui, Add, Text, x12 y255 w100 h20 , Строка 1
+Gui, Add, Text, x12 y285 w100 h20 , Строка 2
+Gui, Add, Text, x12 y315 w100 h20 , Строка 3
+Gui, Add, Edit, x122 y20 w340 h20 vStr1, %Str1%
+Gui, Add, Edit, x122 y50 w340 h20 vStr2, %Str2%
+Gui, Add, Edit, x122 y80 w340 h20 vStr3, %Str3%
+Gui, Add, Edit, x122 y140 w340 h20 vStr4, %Str4%
+Gui, Add, Edit, x122 y170 w340 h20 vStr5, %Str5%
+Gui, Add, Edit, x122 y200 w340 h20 vStr6, %Str6%
+Gui, Add, Edit, x122 y255 w340 h20 vStr7, %Str7%
+Gui, Add, Edit, x122 y285 w340 h20 vStr8, %Str8%
+Gui, Add, Edit, x122 y315 w340 h20 vStr9, %Str9%
+Gui, Add, Text, x12 y110 w450 h20 , Вводить полностью строку (с /f, /n или вообще без). Если нужно, то с тегом.
+Gui, Add, Text, x12 y230 w450 h20 , Вводить полностью строку (с /f, /n или вообще без). Если нужно, то с тегом.
+Gui, Tab, Клавиши
+Gui, Add, Button, x162 y300 w150 h60 gOK, Сохранить клавиши
+Gui, Add, Text, x12 y20 w100 h30 , /healme
+Gui, Add, Text, x12 y60 w100 h30 , Рация /f
+Gui, Add, Text, x12 y100 w100 h30 , Время по RP
+Gui, Add, Text, x12 y140 w100 h30 , Отпр. об. № 1
+Gui, Add, Text, x12 y180 w100 h30 , Отпр. об. № 2
+Gui, Add, Text, x12 y220 w100 h30 , Отпр. об. № 3
+Gui, Add, Text, x12 y260 w100 h30 , Дом. авто
+Gui, Add, Hotkey, x142 y20 w100 h30 vKey1, %Key1%
+Gui, Add, Hotkey, x142 y60 w100 h30 vKey2, %Key2%
+Gui, Add, Hotkey, x142 y100 w100 h30 vKey3, %Key3%
+Gui, Add, Hotkey, x142 y140 w100 h30 vKey4, %Key4%
+Gui, Add, Hotkey, x142 y180 w100 h30 vKey5, %Key5%
+Gui, Add, Hotkey, x142 y220 w100 h30 vKey6, %Key6%
+Gui, Add, Hotkey, x142 y260 w100 h30 vKey7, %Key7%
+Gui, Tab, Другое
+Gui, Add, Button, x162 y339 w150 h30 gGlavKey, Сохранить
+Gui, Add, CheckBox, x122 y20 w100 h40 vAmmo Checked%Ammo%, Отыгровка команд с ammo
+Gui, Add, CheckBox, x232 y20 w100 h40 vDostor Checked%Dostor%, Отыгровка оружия
+Gui, Add, CheckBox, x342 y20 w100 h40 vMasker Checked%Masker%, Отыгровка маски
+Gui, Add, CheckBox, x12 y60 w100 h40 vHealmer Checked%Healmer%, Отыгровка аптечки
+Gui, Add, CheckBox, x122 y60 w100 h40 vFinder Checked%Finder%, Отыгровка /find
+Gui, Add, CheckBox, x232 y60 w100 h40 vZarpl Checked%Zarpl%, Голос. озвучка перед ЗП
+Gui, Add, CheckBox, x342 y60 w100 h40 vRacia Checked%Racia%, Отыгровка рации
+Gui, Add, CheckBox, x122 y100 w100 h40 vTSTimeP Checked%TSTimeP%, Информация о месте во 'Время'
+Gui, Add, CheckBox, x232 y100 w100 h40 vInviteS Checked%InviteS%, Строка '/invite'
+Gui, Add, CheckBox, x342 y100 w100 h40 vUninviteS Checked%UninviteS%, Строка '/uninvite'
+Gui, Show, w479 h379, Mafia AHK by Gamrik
+Goto, OK
+return
+OK:
+{
+    HotKey, %Key1%, Off, UseErrorLevel
+    HotKey, %Key2%, Off, UseErrorLevel
+    HotKey, %Key3%, Off, UseErrorLevel
+    HotKey, %Key4%, Off, UseErrorLevel
+    HotKey, %Key5%, Off, UseErrorLevel
+    HotKey, %Key6%, Off, UseErrorLevel
+    HotKey, %Key7%, Off, UseErrorLevel
+    Gui, Submit, Nohide,
+    HotKey, %Key1%, Active1, On, UseErrorLevel
+    HotKey, %Key2%, Active2, On, UseErrorLevel
+    HotKey, %Key3%, Active3, On, UseErrorLevel
+    HotKey, %Key4%, Active4, On, UseErrorLevel
+    HotKey, %Key5%, Active5, On, UseErrorLevel
+    HotKey, %Key6%, Active6, On, UseErrorLevel
+    HotKey, %Key7%, Active7, On, UseErrorLevel
+    GuiControlGet, Key1
+    GuiControlGet, Key2
+    GuiControlGet, Key3
+    GuiControlGet, Key4
+    GuiControlGet, Key5
+    GuiControlGet, Key6
+    GuiControlGet, Key7
+    IniWrite, %Key1%, %DIRSETTING%, IniKey, Key1
+    IniWrite, %Key2%, %DIRSETTING%, IniKey, Key2
+    IniWrite, %Key3%, %DIRSETTING%, IniKey, Key3
+    IniWrite, %Key4%, %DIRSETTING%, IniKey, Key4
+    IniWrite, %Key5%, %DIRSETTING%, IniKey, Key5
+    IniWrite, %Key6%, %DIRSETTING%, IniKey, Key6
+    IniWrite, %Key7%, %DIRSETTING%, IniKey, Key7
+}
+return
+GuiClose:
+ExitApp
+return
+GlavKey:
+{
+    GuiControlGet, Name
+    GuiControlGet, Name1
+    GuiControlGet, Org
+    GuiControlGet, Role
+    GuiControlGet, Numb
+    GuiControlGet, TegF
+    GuiControlGet, Pol
+    GuiControlGet, Str1
+    GuiControlGet, Str2
+    GuiControlGet, Str3
+    GuiControlGet, Str4
+    GuiControlGet, Str5
+    GuiControlGet, Str6
+    GuiControlGet, Str7
+    GuiControlGet, Str8
+    GuiControlGet, Str9
+    GuiControlGet, Ammo
+    GuiControlGet, Dostor
+    GuiControlGet, Masker
+    GuiControlGet, Healmer
+    GuiControlGet, Finder
+    GuiControlGet, Zarpl
+    GuiControlGet, Racia
+    GuiControlGet, FSTime
+    GuiControlGet, FSTimeP
+    GuiControlGet, TSTimeP
+    GuiControlGet, InviteS
+    GuiControlGet, UninviteS
+    IniWrite, %Name%, %DIRSETTING%, Player, Name
+    IniWrite, %Name1%, %DIRSETTING%, Player, Name1
+    IniWrite, %Org%, %DIRSETTING%, Player, Org
+    IniWrite, %Role%, %DIRSETTING%, Player, Role
+    IniWrite, %Numb%, %DIRSETTING%, Player, Numb
+    IniWrite, %TegF%, %DIRSETTING%, Player, TegF
+    IniWrite, %Pol%, %DIRSETTING%, Player, Pol
+    IniWrite, %Str1%, %DIRSETTING%, Addv, Str1
+    IniWrite, %Str2%, %DIRSETTING%, Addv, Str2
+    IniWrite, %Str3%, %DIRSETTING%, Addv, Str3
+    IniWrite, %Str4%, %DIRSETTING%, Addv, Str4
+    IniWrite, %Str5%, %DIRSETTING%, Addv, Str5
+    IniWrite, %Str6%, %DIRSETTING%, Addv, Str6
+    IniWrite, %Str7%, %DIRSETTING%, Addv, Str7
+    IniWrite, %Str8%, %DIRSETTING%, Addv, Str8
+    IniWrite, %Str9%, %DIRSETTING%, Addv, Str9
+    IniWrite, %Ammo%, %DIRSETTING%, Dop, Ammo
+    IniWrite, %Dostor%, %DIRSETTING%, Dop, Dostor
+    IniWrite, %Masker%, %DIRSETTING%, Dop, Masker
+    IniWrite, %Healmer%, %DIRSETTING%, Dop, Healmer
+    IniWrite, %Finder%, %DIRSETTING%, Dop, Finder
+    IniWrite, %Zarpl%, %DIRSETTING%, Dop, Zarpl
+    IniWrite, %Racia%, %DIRSETTING%, Dop, Racia
+    IniWrite, %FSTime%, %DIRSETTING%, Dop, FSTime
+    IniWrite, %FSTimeP%, %DIRSETTING%, Dop, FSTimeP
+    IniWrite, %TSTimeP%, %DIRSETTING%, Dop, TSTimeP
+    IniWrite, %InviteS%, %DIRSETTING%, Dop, InviteS
+    IniWrite, %UninviteS%, %DIRSETTING%, Dop, UninviteS
+}
+return
+$~Enter::
+if (isInChat() = 1)
+if (isDialogOpen() = 0)
+
+    if (chatinput = "/ahelp 1")
+    {
+        help =
+        (
+
+    {FFD700}/ud {32CD32}• Показать удостоверение.
+    {FFD700}/viz {32CD32}• Дать визитку.
+    {FFD700}/тс {32CD32}• Открыть домашний транспорт.
+    {FFD700}/hold [ID] {32CD32}• Вести за собой.
+    {FFD700}/сон [ID] {32CD32}• Усыпление человека.
+    {FFD700}/хомут [ID] {32CD32}• Одеть РП отыгровкой хомут на руки человека.
+    {FFD700}/убить [ID] {32CD32}• RP убийство человека.
+    {FFD700}/захват [ID] {32CD32}• Похищение (/tie, /bag) с РП отыгровкой.
+    {FFD700}/свобода [ID] {32CD32}• Отпустить заложника.
+    {FFD700}/invite [ID] {32CD32}• Принять в орг.
+    {FFD700}/uninvite [ID] [Причина] {32CD32}• Уволить из орг.
+    {FFD700}/rang [ID] [+/-] {32CD32}• Выдать новый титул.
+    {FFD700}/changeskin [ID] {32CD32}• Сменить форму.
+    {FFD700}/перчатки {32CD32}• Одеть перчатки, чтобы не оставить отпечатков.
+    {FFD700}/камеры {32CD32}• Отключение камер в радиусе 1 км.
+    {FFD700}/растяжка {32CD32}• Установить разтяжку на дверной проём.
+    {FFD700}/бомба {32CD32}• Закладка взрывного устройства.
+    {FFD700}/взрыв {32CD32}• Активация и детонация взрывчатки.
+    {FFD700}/разминирование {32CD32}• Деактивация взрывчатки.
+    {FFD700}/хвост {32CD32}• Сообщенить о погоне сотрудников МВД.
+    {FFD700}/менты {32CD32}• Сообщенить о задержании сотрудниками МВД.
+    {FFD700}/капсула {32CD32}• Принятие капсулы.
+    {FFD700}/глушилка {32CD32}• Деактивация записывающих устройств.
+
+        )
+    showDialog("0", "{ADFF2F}!!! Справка по Mafia AHK от Gamrik !!!", help, "Закрыть")
+    }
+    if (chatinput = "/ahelp 2")
+    {
+        help =
+        (
+
+    {FFD700}/fh (Текст) {32CD32}• OOC сообщение (/f).
+    {FFD700}/rep (Текст) {32CD32}• Сообщение в репорт.
+    {FFD700}/собес [1-3] {32CD32}• Проведение собеседования.
+    {FFD700}/pr [1-3] {32CD32}• Проверка отъявления [1-3].
+    {FFD700}/otpr [1-3] {32CD32}• Отправка отъявления [1-3].
+    {FFD700}/histor [ID] {32CD32}• Проверка истории ников по ID.
+    {FFD700}/dlcn {32CD32}• Итальянский словарь.
+    {FFD700}/dyak {32CD32}• Японский словарь.
+    {FFD700}/adds [ID] {32CD32}• Добавление присутствующего в строю.
+    {FFD700}/st {32CD32}• Просмотр присутствующих.
+    {FFD700}/stres {32CD32}• Сброс списка присутствующих.
+    {FFD700}/finfo {32CD32}• Информация в рацию.
+    {FFD700}/bl [ID] {32CD32}• Проверить на нахождение в ЧС.
+    {FFD700}/addblnick [Nick_Name] {32CD32}• Добавить в ЧС по нику.
+    {FFD700}/addblid [ID] {32CD32}• Добавить в ЧС по ID.
+    {FFD700}/removeblnick [Nick_Name] {32CD32}• Убрать из ЧС по нику.
+    {FFD700}/removeblid [ID] {32CD32}• Убрать из ЧС по ID.
+
+        )
+    showDialog("0", "{ADFF2F}!!! Справка Mafia AHK от Gamrik !!!", help, "Закрыть")
+    }
+    if (RegExMatch(chatInput, "^\/bl ([0-9]*)", p))
+    {
+        Name := GetPlayerNameById(p1)
+        FileRead, Names, %DIR%\BlackList.txt
+        If RegExMatch(Names, name)
+        {
+        AddChatMessageEx(0xff0000,"{035ECD}[Mafia] {ff0000}Внимание! Этот игрок находится в Черном Списке!")
+        }
+        else
+        {
+            SendChat("/history " Name)
+            History := getDialogText()
+            sleep, 200
+        SendInput, {Enter}
+            FileRead, Names, %DIR%\BlackList.txt
+            Loop, read, C:\Log File.txt
+            last_line := A_LoopReadLine
+            Loop, parse, Names, `n, `r
+            {
+                If History contains %A_LoopField%
+                {
+                AddChatMessageEx(0xff0000,"{035ECD}[Mafia] {ff0000}Внимание! Игрок находится в Чёрном Списке под ником: " A_LoopField)
+                }
+            }
+        }
+    }
+    if (RegExMatch(chatInput, "^\/addblnick (.*)", p))
+    {
+        FileAppend, `n%p1%, %DIR%\BlackList.txt
+    addChatMessageEx(0x32CD32, "{035ECD}[Mafia] {32CD32}" p1 " был внесён в Чёрный Список!")
+    }
+    if (RegExMatch(chatInput, "^\/addblid ([0-9]*)", p))
+    {
+        NickNamePlayer := GetPlayerNameById(p1)
+        FileAppend, `n%NickNamePlayer%, %DIR%\BlackList.txt
+    addChatMessageEx(0x32CD32, "{035ECD}[Mafia] {32CD32}" NickNamePlayer " был внесён в Чёрный Список!")
+    }
+    if (RegExMatch(chatInput, "^\/removeblnick (.*)", p))
+    {
+        FileRead, Names, %DIR%\BlackList.txt
+        Loop, read, C:\Log File.txt
+        last_line := A_LoopReadLine
+        Loop, parse, Names, `n, `r
+        {
+            If p1 contains %A_LoopField%
+            {
+                Names := RegExReplace(Names, A_LoopField, "")
+                FileDelete, %DIR%\BlackList.txt
+                FileAppend, %Names%, %DIR%\BlackList.txt
+            addChatMessageEx(0x32CD32, "{035ECD}[Mafia] {32CD32}" p1 " был вынесен из Чёрного Списка!")
+            }
+        }
+    }
+    if (RegExMatch(chatInput, "^\/removeblid ([0-9]*)", p))
+    {
+        NickNamePlayer := GetPlayerNameById(p1)
+        FileRead, Names, %DIR%\BlackList.txt
+        Loop, read, C:\Log File.txt
+        last_line := A_LoopReadLine
+        Loop, parse, Names, `n, `r
+        {
+            If NickNamePlayer contains %A_LoopField%
+            {
+                Names := RegExReplace(Names, A_LoopField, "")
+                FileDelete, %DIR%\BlackList.txt
+                FileAppend, %Names%, %DIR%\BlackList.txt
+            addChatMessageEx(0x32CD32, "{035ECD}[Mafia] {32CD32}" NickNamePlayer " был вынесен из Чёрного Списка!")
+            }
+        }
+    }
+    if (ChatInput = "/finfo")
+    {
+    addChatMessageEx(0xE6A80B, "{035ECD}[Mafia] {E6A80B}Посмотрите, сколько сотрудников всего в сети и сколько в AFK. После просмотра нажмите Enter.")
+        SendChat("/find")
+        KeyWait, Enter, D
+        sleep, 200
+    showDialog("1", "{ADFF2F}!!! Info Mafia AHK от Gamrik !!!", "Сколько сотрудников в сети:", "Закрыть")
+    Input, Kolvoplayers, V, {Enter}
+        sleep, 200
+    showDialog("1", "{ADFF2F}!!! Info Mafia AHK от Gamrik !!!", "Сколько сотрудников AFK:", "Закрыть")
+    Input, KolvoAFKplayers, V, {Enter}
+        FormatTime, TimeString,, dd MMMM yyyy, HH:mm:ss
+        ZpTime := 60-A_Min
+        SendChat("/f [JC Info]: Уважаемые сотрудники, сейчас в штате граждан: " CountOnlinePlayers()".")
+        sleep, 400
+        SendChat("/f [JC Info]: Из них " Kolvoplayers " являются нашими сотрудниками. Спящих сотрудников: " KolvoAFKplayers ".")
+        sleep, 400
+        SendChat("/f [JC Info]: На часах TT: " TimeString ". До зарплаты остаётся: " ZpTime " мин.")
+    }
+    if (RegExMatch(chatInput, "^\/adds ([0-9]*)", p))
+    {
+        if (ProvStroi = 0)
+        {
+            ProvStroi := 1
+            SendChat("/find")
+            sleep, 200
+            TextStroi := getDialogText()
+            sleep, 100
+        SendInput, {Enter}
+        }
+        Nick := GetPlayerNameById(p1)
+        Nick := RegExReplace(Nick, "_", A_Space)
+    addChatMessageEx(0x32CD32, "{035ECD}[Mafia] {32CD32}" Nick " был внесён в список присутствующих!")
+        Id := p1 "]"
+    TextStroi := RegExReplace(TextStroi, Id, "{00FF00}+{FFFFFF}]")
+    }
+    if (chatinput="/st")
+    {
+    ShowDialog("0", "{ADFF2F}?? Присутствующие в строю ??", TextStroi, "Закрыть")
+    }
+    if (chatinput="/stres")
+    {
+    addChatMessageEx(0x32CD32, "{035ECD}[Mafia] {32CD32}Список присутствующих в строю был успешно обнулён.")
+        TextStroi := ""
+        ProvStroi := 0
+    }
+    if (chatinput = "/dyak")
+    {
+        dict =
+        (
+    {0033FF}Ты - {CC0000}[ Anata ] ( Аната ) 
+    {0033FF}Он - {CC0000}[ Kare ] ( Карэ ) 
+    {0033FF}Она -{CC0000} [ Kanojo ] ( Канодзё ) 
+    {0033FF}Мы -{CC0000} [ Watashi-tachi ] ( Ваташи-тачи ) 
+    {0033FF}Они - {CC0000}[ Karera ] ( Карэра ) 
+        
+    {0033FF}Да - {CC0000}[ Hai ] ( Хай ) 
+    {0033FF}Нет - {CC0000}[ Iie ] ( Ииэ ) 
+    {0033FF}Понятно - {CC0000}[ Vakatta ] ( Вакатта ) 
+    {0033FF}Не понимаю - {CC0000}[ Vakarimasen ] ( Вакаримасэн ) 
+    {0033FF}Спасибо - {CC0000}[ Arigato ] ( Аригато ) 
+    {0033FF}Пожалуйста -{CC0000} [ Dou itashimashita ] ( До итащимащта ) 
+    {0033FF}Извините(обращение к старшему) -{CC0000} [ Sumimasen ] ( Сумимасэн ) 
+    {0033FF}Извините(обращение к младшему) - {CC0000}[ Komene ] ( Коменэ ) 
+    {0033FF}Меня зовут… - {CC0000}[ Watashi wa ... desu ] ( Ваташи ва … дэс ) 
+    {0033FF}Прошу любить и жаловать -{CC0000} [ Yoroshi onegai shimasu ] ( Йороши онэгай шимас ) 
+        
+    {0033FF}Здравствуйте, как дела? - {CC0000}[ Kon'niсhiwa, o genki desu ka? ] ( Конничива, огэнки дэс ка? ) 
+    {0033FF}Спасибо, всё хорошо - {CC0000}[ Genki desu ] ( Гэнки дэс ) 
+    {0033FF}Доброе утро - {CC0000}[ Ohayo godzaimasu ] ( Охайо годзаимас ) 
+    {0033FF}Добрый день - {CC0000}[ Konniсhiwa ] ( Конничива ) 
+    {0033FF}Добрый вечер - {CC0000}[ Komban va ] ( Комбан ва ) 
+    {0033FF}Как поживаете? - {CC0000}[ O genki desu ka? ] ( О гэнки дэска? ) 
+    {0033FF}Прощайте - {CC0000}[ Sayonara ] ( Саёнара ) 
+    {0033FF}Пока –{CC0000} [ Ja ne ] (Джа нэ) 
+    {0033FF}До завтра – {CC0000}[ Matta ashita ] ( Матта ащта ) 
+    {0033FF}Спокойной ночи - {CC0000}[ Oyasumi nasai ] ( Оясуми насай ) 
+    {0033FF}Я счастлив - {CC0000}[ Shiawase ] ( Шиавасэ )
+    {0033FF}Я - {CC0000}[ Watashi ] ( Ваташи ) 
+        )
+    showDialog("0", "{ADFF2F}?? Японский словарь ??", dict, "Закрыть")
+    }
+    if (chatinput = "/dlcn")
+    {
+        dict =
+        (
+    {ADFF2F}•••••••••••>>> Приветствия, прощания: <<<•••••••••••
+        
+    {0033FF}Buongiorno (БуонДжорно') - {32CD32}Добрый день / Доброе утро 
+    {0033FF}Buonasera (БуонаСера) - {32CD32}Добрый вечер 
+    {0033FF}Ciao (Чао) - {32CD32}Привет / Пока 
+    {0033FF}Salve (Сальве) - {32CD32}Здравствуйте 
+    {0033FF}Salut (Салют) - {32CD32}Приветствую 
+    {0033FF}A presto (А престо) - {32CD32}До скорого 
+    {0033FF}Arrivederci (Арриведерчи) - {32CD32}До свидания 
+    {0033FF}Addio (Аддио) - {32CD32}Прощай 
+        
+    {ADFF2F}•••••••••••>>> Восклицания: <<<•••••••••••
+        
+    {0033FF}Perfetto! (Перфетто!) -{32CD32} Замечательно! 
+    {0033FF}Ecco! (Эццо!) -{32CD32} Вот! 
+    {0033FF}Madonna! (Мадонна) - {32CD32}Мать моя женщина! 
+    {0033FF}Presto! (Престо) - {32CD32}Быстро! 
+    {0033FF}Merda! (Мэрда!) -{32CD32} Дерьмо! 
+    {0033FF}Sbirri! (Сбирри!) - {32CD32}Копы! 
+    {0033FF}Via! (Виа!) - {32CD32}Убираемся / Валим! 
+    {0033FF}Buona fortuna (Буона Фортуна) - {32CD32}Удачи! 
+    {0033FF}Bene (Бьено) - {32CD32}Хороший, хорошо 
+    {0033FF}Bravo! (Браво!) - {32CD32}Молодец / Браво! 
+        
+    {ADFF2F}•••••••••••>>> Разное: <<<•••••••••••
+        
+    {0033FF}Si (Си) -{32CD32} Да 
+    {0033FF}No (Но) -{32CD32} Нет 
+    {0033FF}Male (Мале) - {32CD32}Плохо 
+    {0033FF}Prego/Per favore (Прего/Пер фавор) - {32CD32}Пожалуйста 
+    {0033FF}Traditore (Традиторе) - {32CD32}Предатель 
+    {0033FF}Idiota (Идиота) -{32CD32} Идиот 
+    {0033FF}Amico/Amici (Амико/Амичи) - {32CD32}Друг / Друзья 
+    {0033FF}Fratello/Fratelli (Фратэлло/Фратэлли) -{32CD32} Брат / Братья 
+    {0033FF}Nemico (Нэмико) -{32CD32} Враг 
+    {0033FF}Bandito (Бандито) - {32CD32}Бандит 
+    {0033FF}Cazzata (Каццата. Кацца) -{32CD32} Хрень 
+    {0033FF}Certo (Черто) -{32CD32} Конечно 
+    {0033FF}Scusi (Скузи) - {32CD32}Простите, извините 
+    {0033FF}Mi piace/Non mi piace (Мипьяче/Нон Мипьяче) -{32CD32} Мне нравится / Мне не нравится 
+    {0033FF}D'accordo (Д'аккордо) -{32CD32} Согласен 
+    {0033FF}Come sta (Комэ ста) -{32CD32} Как дела??
+        )
+    showDialog("0", "{ADFF2F}?? Итальянский словарь ??", dict, "Закрыть")
+    }
+    if (chatinput = "/глушилка")
+    {
+        if (getServerName() != "Advance RolePlay 5 | Blue Server")
+        {
+            SendChat("/do На поясе закреплён небольшой прибор с надписью 'JC'.")
+            sleep, 700
+            SendChat("/me снял прибор с пояса и нажал на кнопку")
+            sleep, 700
+            SendChat("/do Все жучки были отключены в радиусе 10 метров.")
+        }
+    }
+    if (RegExMatch(chatInput, "^\/histor ([0-9]*)", p))
+    {
+        Nick := getPlayerNameById(p1)
+        SendChat("/history " Nick)
+    }
+    if (chatinput = "/капсула")
+    {
+        ID := GetID()
+        Nick := getPlayerNameById(id)
+        Nick := RegExReplace(Nick, "_", A_Space)
+        SendChat("/do На рукаве незаметно закреплена капсула.")
+        sleep, 700
+        SendChat("/me быстро закинул капсулу в рот и раскусил")
+        sleep, 700
+        SendChat("/do " Nick " парализован. " Nick " потерял сознание. ")
+    }
+    if (RegExMatch(chatInput, "^\/убить ([0-9]*)", p))
+    {
+        ID := GetID()
+        Nick1 := getPlayerNameById(id)
+        Nick1 := RegExReplace(Nick1, "_", A_Space)
+        Nick := getPlayerNameById(p1)
+        Nick := RegExReplace(Nick, "_", A_Space)
+        SendChat("/do На поясе у " Nick1 " висит кобура. В кобуре Desert Eagle.")
+        sleep, 700
+        SendChat("/me быстро выхватил пистолет из кобуры")
+        sleep, 700
+        SendChat("/me передёрнул затвор и сделал несколько несмертельных выстрелов в " Nick)
+        sleep, 700
+        SendChat("/me сделал контрольный выстрел в голову " Nick)
+    }
+    if (RegExMatch(chatInput, "^\/сон ([0-9]*)", p))
+    {
+        Nick := getPlayerNameById(p1)
+        Nick := RegExReplace(Nick, "_", A_Space)
+        SendChat("/do На поясе закреплён шприц.")
+        sleep, 700
+        SendChat("/me быстро схватил шприц и снял колпачок")
+        sleep, 700
+        SendChat("/me воткнул шприц в шею " Nick)
+        sleep, 700
+        SendChat("/me опустил поршень шприца, усыпив " Nick)
+        sleep, 700
+        SendChat("/me выбросил шприц с колпачком в сторону")
+    }
+    if (chatinput = "/менты")
+    {
+        city := getPlayerCity()
+        zone := getPlayerZone()
+        SendChat("/f (( Ребят, менты вяжут в " City ", " Zone ". Помогите, пожалуйста! ))")
+    }
+    if (chatinput = "/хвост")
+    {
+        city := getPlayerCity()
+        zone := getPlayerZone()
+        SendChat("/f (( Ребят, менты на хвосте в " City ", " Zone ". Помогите, пожалуйста! ))")
+    }
+    if (chatinput = "/камеры")
+    {
+        SendChat("/do На поясе висит КПК.")
+        sleep, 700
+        SendChat("/me снял КПК с пояса и включил его")
+        sleep, 700
+        SendChat("/me запутил приложение JC")
+        sleep, 700
+        SendChat("/me нажал кнопку 'Свободная жизнь'")
+        sleep, 700
+        SendChat("/do Камеры в радиусе одного километра отключены.")
+    }
+    if (chatinput = "/перчатки")
+    {
+        SendChat("/do На поясе висит пара новых перчаток.")
+        sleep, 700
+        SendChat("/me снял перчатки с пояса и одел их")
+    }
+    if (chatinput = "/растяжка")
+    {
+        SendChat("/do На спине спец. рюкзак.")
+        sleep, 700
+        SendChat("/me быстро снял рюкзак и достал тонкую леску с гранатой 'Малыш' от JC")
+        sleep, 700
+        SendChat("/me одел рюкзак")
+        sleep, 700
+        SendChat("/me закрепил гранату на одной стороне проёма и протянул от неё леску к другой")
+        sleep, 700
+        SendChat("/me натянул леску и зафиксировал второй край")
+        sleep, 700
+        SendChat("/do Растяжка установлена.")
+    }
+    if (chatinput = "/бомба")
+    {
+        if (getServerName() != "Advance RolePlay 5 | Blue Server")
+        {
+            SendChat("/do На спине спец. рюкзак.")
+            sleep, 900
+            SendChat("/me быстро снял рюкзак и достал непонятный куб с наклейкой 'JC'")
+            sleep, 900
+            SendChat("/me поставил куб на пол")
+            sleep, 900
+            SendChat("/anim 14")
+            sleep, 900
+            SendChat("/me нажал маленькую кнопку сбоку")
+            sleep, 900
+            SendChat("/do На кубе загорелся зелёный индикатор.")
+            sleep, 400
+            KolvoBomb := KolvoBomb + 1
+        addChatMessageEx(0x32CD32, "{035ECD}[Mafia] {32CD32}Бомб установлено: " KolvoBomb ".")
+            sleep, 500
+            SendChat("/me одел рюкзак на плечи и достал из кармана КПК")
+            sleep, 900
+            SendChat("/me включил КПК и зашёл в приложение 'Жаркий август'")
+            sleep, 900
+            SendChat("/me проверил связь между спец. блоком и КПК")
+        }
+    }
+    if (chatinput = "/взрыв")
+    {
+        if (getServerName() != "Advance RolePlay 5 | Blue Server")
+        {
+            SendChat("/do КПК в руках с включённым приложением 'Жаркий август'.")
+            sleep, 700
+            SendChat("/me нажал кнопку 'Салют'")
+            sleep, 700
+            SendChat("/do КПК отправил данные на спец. куб.")
+            sleep, 700
+            SendChat("/do Заряд сдетонировал. Произошёл взрыв " KolvoBomb " бомб.")
+            KolvoBomb := 0
+        }
+    }
+    if (chatinput = "/разминирование")
+    {
+        if (getServerName() != "Advance RolePlay 5 | Blue Server")
+        {
+            SendChat("/do КПК в руках с включённым приложением 'Жаркий август'.")
+            sleep, 700
+            SendChat("/me нажал кнопку 'Спонсор'")
+            sleep, 700
+            SendChat("/do КПК отправил данные на спец. куб.")
+            sleep, 700
+            SendChat("/do Заряд деактивирован у " KolvoBomb " кубов. 'Кислота 5.47 JC' полностью уничтожила куб.")
+            KolvoBomb := 0
+        }
+    }
+    if (chatinput = "/find")
+    {
+        if (Finder = 1)
+        {
+            SendChat("/me достал КПК и включил его")
+            Sleep, 600
+            SendChat("/me проверил список сотрудников в штате")
+            Sleep, 600
+            SendChat("/me выключил КПК и убрал его")
+        }
+    }
+    if (RegExMatch(chatInput, "^\/захват ([0-9]*)", p))
+    {
+        if (getServerName() != "Advance RolePlay 5 | Blue Server")
+        {
+            SendChat("/do На спине висит спец. рюкзак.")
+            sleep, 700
+            SendChat("/me cнял рюкзак")
+            sleep, 700
+            SendChat("/me достал и распутал верёвку")
+            sleep, 700
+            SendChat("/tie " p1)
+            sleep, 700
+            SendChat("/me достал и открыл чёрный мешок")
+            sleep, 700
+            SendChat("/bag " p1)
+            sleep, 700
+            SendChat("/me обратно одел рюкзак")
+        }
+    }
+    if (RegExMatch(chatInput, "^\/свобода ([0-9]*)", p))
+    {
+        if (getServerName() != "Advance RolePlay 5 | Blue Server")
+        {
+            SendChat("/do На спине висит спец. рюкзак.")
+            sleep, 700
+            SendChat("/me cнял рюкзак")
+            sleep, 700
+            SendChat("/bag " p1)
+            sleep, 700
+            SendChat("/me скомкал мешок и закинул в рюкзак")
+            sleep, 700
+            SendChat("/tie " p1)
+            sleep, 700
+            SendChat("/me собрал верёвку и положил в рюкзак")
+            sleep, 700
+            SendChat("/me повесил рюкзак на плечо")
+        }
+    }
+    if (RegExMatch(chatInput, "^\/rep (.*)", p))
+    {
+        if p1 contains !
+        {
+            AddChatMessage("Не используйте знак восклицания!")
+        }
+        else
+        {
+            SendChat("/mn")
+            Sleep, 300
+        SendInput, {vk28 4}{Enter}
+            Sleep, 300
+        SendInput, %p1%{Enter}
+        }
+    }
+    if (RegExMatch(chatInput, "^\/собес (.*)", p))
+    {
+        if (p1 = 1)
+        {
+            SendChat("Приветствую. Представтесь и расскажите немного о себе.")
+        }
+        if (p1 = 2)
+        {
+            SendChat("Отлично. Давайте посмотрим Ваши документы.")
+            sleep, 600
+            SendChat("Дайте паспорт, лицензии и выписку, пожалуйста.")
+        }
+        if (p1 = 3)
+        {
+            sleep, 200
+        AddChatMessage("{ADFF2F} После написания термина нажмите Enter.")
+            ShowDialog("1", "Термин", "Напишите термин для проверки." , "Okey")
+        Input, Otvet, V, {Enter}
+            SendChat("/me достал карточку")
+            sleep, 600
+            SendChat("/me передал карточку человеку на против")
+            sleep, 600
+            SendChat("/do На карточке написано: " Otvet ".")
+            sleep, 600
+            SendChat("Как вы думаете, что это такое?")
+        }
+    }
+    if (RegExMatch(chatInput, "^\/hold ([0-9]*)", p))
+    {
+        Nick := getPlayerNameById(p1)
+        Nick := RegExReplace(Nick, "_", A_Space)
+        if (Pol = "Boy")
+        {
+            SendChat("/me заломал руку " Nick)
+        }
+        else
+        {
+            SendChat("/me заломала руку " Nick)
+        }
+        Sleep, 700
+        SendChat("/me ведёт " Nick " за собой")
+    }
+    if (chatinput = "/mask")
+    {
+        if (Masker = 1)
+        {
+            SendChat("/do В кармане лежит чёрная маска.")
+            Sleep, 700
+            if (Pol = "Boy")
+            {
+                SendChat("/me достал чёрную маску и надел её")
+            }
+            else
+            {
+                SendChat("/me достала чёрную маску и надела её")
+            }
+        }
+    }
+    if (chatinput = "/healme")
+    {
+        If (healmer = 1)
+        {
+            SendChat("/do На поясе висит спец. набор.")
+            Sleep, 700
+            if (Pol = "Boy")
+            {
+                SendChat("/me достал из набора шприц")
+                Sleep, 700
+                SendChat("/do В шприце 'Адреналин'.")
+                Sleep, 700
+                SendChat("/me вколол шприц в плечо и опустил поршень")
+            }
+            else
+            {
+                SendChat("/me достала из набора шприц")
+                Sleep, 700
+                SendChat("/do В шприце 'Адреналин'.")
+                Sleep, 700
+                SendChat("/me вколола шприц в плечо и опустила поршень")
+            }
+        }
+    }
+    if (RegExMatch(chatInput, "^\/rang ([0-9]*) (.*)", p))
+    {
+        SendChat("/do На спине висит рюкзак.")
+        Sleep, 700
+        if (Pol = "Boy")
+        {
+            SendChat("/me снял рюкзак, достал новый бейдж и передал его")
+        }
+        else
+        {
+            SendChat("/me сняла рюкзак, достала новый бейдж и передала его")
+        }
+        Sleep, 2500
+    }
+    if (chatinput = "/тс")
+    {
+        if (Pol = "Boy")
+        {
+            if (opencar = 1)
+            {
+                SendChat("/me нажал кнопку на брелке 'JC' и закрыл машину")
+                opencar := 0
+            }
+            else
+            {
+                SendChat("/me нажал кнопку на брелке 'JC' и открыл машину")
+                opencar := 1
+            }
+        }
+        else
+        {
+            if (opencar = 1)
+            {
+                SendChat("/me нажала кнопку на брелке 'JC' и закрыла машину")
+                opencar := 0
+            }
+            else
+            {
+                SendChat("/me нажала кнопку на брелке 'JC' и открыла машину")
+                opencar := 1
+            }
+        }
+        Sleep, 700
+        SendChat("/lock 1")
+    }
+    if (RegExMatch(chatInput, "^\/changeskin ([0-9]*)", p))
+    {
+        SendChat("/do На спине висит рюкзак.")
+        Sleep, 700
+        if (Pol = "Boy")
+        {
+            SendChat("/me снял рюкзак, достал новую форму и передал её")
+        }
+        else
+        {
+            SendChat("/me сняла рюкзак, достала новую форму и передала её")
+        }
+        Sleep, 2500
+    }
+    if (RegExMatch(chatInput, "^\/invite ([0-9]*)", p))
+    {
+        SendChat("/do На спине у " Name " висит рюкзак.")
+        Sleep, 700
+        if (Pol = "Boy")
+        {
+            SendChat("/me достал форму, рацию и бейдж из рюкзака")
+            Sleep, 700
+            SendChat("/me передал вещи человеку")
+        }
+        else
+        {
+            SendChat("/me достала форму, рацию и бейдж из рюкзака")
+            Sleep, 700
+            SendChat("/me передала вещи человеку")
+        }
+        Sleep, 700
+        Nick := getPlayerNameById(p1)
+        Nick := RegExReplace(Nick, "_", A_Space)
+        if (InviteS = 1)
+        {
+            Sleep, 700
+            if (TegF != "-")
+            {
+                SendChat("/f " TegF " К нам был принят сотрудник: " nick ". Поздравим его!")
+            }
+            else
+            {
+                SendChat("/f К нам был принят сотрудник: " nick ". Поздравим его!")
+            }
+        }
+    }
+    if (RegExMatch(chatInput, "^\/uninvite ([0-9]*) (.*)", p))
+    {
+        Nick := getPlayerNameById(p1)
+        Nick := RegExReplace(Nick, "_", A_Space)
+        if (Pol = "Boy")
+        {
+            SendChat("/me достал КПК и зашёл в базу данных предприятия")
+            Sleep, 700
+            SendChat("/me нашёл спец. дело нужного человека")
+            Sleep, 700
+            SendChat("/me поставил пометку 'Уволен'")
+        }
+        else
+        {
+            SendChat("/me достала КПК и зашла в базу данных предприятия")
+            Sleep, 700
+            SendChat("/me нашла спец. дело нужного человека")
+            Sleep, 700
+            SendChat("/me поставила пометку 'Уволен'")
+        }
+        if (UninviteS = 1)
+        {
+            Sleep, 700
+            if (TegF != "-")
+            {
+                SendChat("/f " TegF " Уволен сотрудник: " Nick ". Причина: " p2)
+            }
+            else
+            {
+                SendChat("/f Уволен сотрудник: " Nick ". Причина: " p2)
+            }
+        }
+    }
+    if (chatinput = "/viz")
+    {
+        if (Pol = "Boy")
+        {
+            SendChat("/do В верхнем кармашке лежит визитница.")
+            sleep, 600
+            SendChat("/me достал визитницу и вытащил визитку, затем передал её")
+            sleep, 600
+            SendChat("/do Написано: " Name " | № " Numb " | " Org " | " Role ".")
+            sleep, 600
+            SendChat("/me убрал визитницу обратно в кармашек")
+        }
+        else
+        {
+            SendChat("/do В верхнем кармашке лежит визитница.")
+            sleep, 600
+            SendChat("/me достала визитницу и вытащила визитку, затем передала её")
+            sleep, 600
+            SendChat("/do Написано: " Name " | № " Numb " | " Org " | " Role ".")
+            sleep, 600
+            SendChat("/me убрал визитницу обратно в кармашек")
+        }
+    }
+    if (Ammo = 1)
+    {
+        if (chatinput = "/takeammo")
+        {
+            sleep, 700
+            if (Pol = "Boy")
+            {
+                SendChat("/me напрягся и взял ящик")
+            }
+            else
+            {
+                SendChat("/me напряглась и взяла ящик")
+            }
+        }
+        if (chatinput = "/putammo")
+        {
+            sleep, 700
+            if (Pol = "Boy")
+            {
+                SendChat("/me облегчённо положил ящик")
+            }
+            else
+            {
+                SendChat("/me облегчённо положила ящик")
+            }
+        }
+        if (chatinput = "/dropammo")
+        {
+            sleep, 700
+            if (Pol = "Boy")
+            {
+                SendChat("/me собрался с силами и выбросил ящик")
+            }
+            else
+            {
+                SendChat("/me собралась с силами и выбросила ящик")
+            }
+        }
+    }
+    if (chatinput = "/drive")
+    {
+        if (Pol = "Boy")
+        {
+            sleep, 700
+            SendChat("/me достал КПК и нажал кнопку доставки транспорта")
+            sleep, 400
+            SendChat("/me убрал КПК обратно")
+        }
+        else
+        {
+            sleep, 700
+            SendChat("/me достала КПК и нажала кнопку доставки транспорта")
+            sleep, 400
+            SendChat("/me убрала КПК обратно")
+        }
+    }
+    if (RegExMatch(chatInput, "^\/bomb ([0-9]*)", p))
+    {
+        if (Pol = "Boy")
+        {
+            SendChat("/me достал КПК и случайно уронил его")
+        }
+        else
+        {
+            SendChat("/me достала КПК и случайно уронила его")
+        }
+        sleep, 500
+        SendChat("/do Включённый КПК упал в лужу и стал искриться.")
+        sleep, 500
+        SendChat("/do Через " p1 " секунд будет взрыв КПК.")
+    }
+    if (chatinput = "/ud")
+    {
+        if (Pol = "Boy")
+        {
+            SendChat("/do В левом кармашке штанов лежит удостоверение.")
+            sleep, 600
+            SendChat("/me вытащил удостоверение и показал его")
+            sleep, 600
+            SendChat("/do Написано: " Name " | № " Numb " | " Org " | " Role ".")
+            sleep, 600
+            SendChat("/me закрыл удостоверение и положил обратно в карман")
+        }
+        else
+        {
+            SendChat("/do В левом кармашке штанов лежит удостоверение.")
+            sleep, 600
+            SendChat("/me вытащил удостоверение и показал его")
+            sleep, 600
+            SendChat("/do Написано: " Name " | № " Numb " | " Org " | " Role ".")
+            sleep, 600
+            SendChat("/me закрыл удостоверение и положил обратно в карман")
+        }
+    }
+    if (RegExMatch(chatInput, "^\/fn (.*)", p))
+    {
+        SendChat("/f (( " p1 " ))")
+    }
+    if (RegExMatch(chatInput, "^\/хомут ([0-9]*)", p))
+    {
+        Nick := getPlayerNameByID(p1)
+        sleep, 300
+        Nick := RegExReplace(Nick, "_", A_Space)
+        SendChat("/do На поясе у " Name " весит нейлоновый хомут.")
+        sleep, 600
+        if (Pol = "Boy")
+        {
+            SendChat("/me снял нейлоновый хомут и распрямил")
+            sleep, 600
+            SendChat("/me резко заломал " Nick " руки назад и закрепил хомутом")
+        }
+        else
+        {
+            SendChat("/me сняла нейлоновый хомут и распрямила")
+            sleep, 600
+            SendChat("/me резко заломала " Nick " руки назад и закрепила хомутом")
+        }
+        sleep, 600
+        SendChat("/do Человек не может двигать руками.")
+        sleep, 600
+        SendChat("/me крепко держит " Nick " за плечо")
+    }
+    if (RegExMatch(chatInput, "^\/pr ([0-9]*)", p))
+    {
+        if (p1 = 1)
+        {
+            if (Str1 != "")
+            {
+            addChatMessageEx(0xFFFFFF, "{035ECD}[Mafia] {FFFFFF}" Str1)
+                sleep, 400
+            }
+            if (Str2 != "")
+            {
+            addChatMessageEx(0xFFFFFF, "{035ECD}[Mafia] {FFFFFF}" Str2)
+                sleep, 400
+            }
+            if (Str3 != "")
+            {
+            addChatMessageEx(0xFFFFFF, "{035ECD}[Mafia] {FFFFFF}" Str3)
+            }
+        }
+        if (p1 = 2)
+        {
+            if (Str4 != "")
+            {
+            addChatMessageEx(0xFFFFFF, "{035ECD}[Mafia] {FFFFFF}" Str4)
+                sleep, 400
+            }
+            if (Str5 != "")
+            {
+            addChatMessageEx(0xFFFFFF, "{035ECD}[Mafia] {FFFFFF}" Str5)
+                sleep, 400
+            }
+            if (Str6 != "")
+            {
+            addChatMessageEx(0xFFFFFF, "{035ECD}[Mafia] {FFFFFF}" Str6)
+            }
+        }
+        if (p1 = 3)
+        {
+            if (Str7 != "")
+            {
+            addChatMessageEx(0xFFFFFF, "{035ECD}[Mafia] {FFFFFF}" Str7)
+                sleep, 400
+            }
+            if (Str8 != "")
+            {
+            addChatMessageEx(0xFFFFFF, "{035ECD}[Mafia] {FFFFFF}" Str8)
+                sleep, 400
+            }
+            if (Str9 != "")
+            {
+            addChatMessageEx(0xFFFFFF, "{035ECD}[Mafia] {FFFFFF}" Str9)
+            }
+        }
+    }
+    if (RegExMatch(chatInput, "^\/otpr ([0-9]*)", p))
+    {
+        if (p1 = 1)
+        {
+            if (Str1 != "")
+            {
+                SendChat(Str1)
+                sleep, 400
+            }
+            if (Str2 != "")
+            {
+                SendChat(Str2)
+                sleep, 400
+            }
+            if (Str3 != "")
+            {
+                SendChat(Str3)
+            }
+        }
+        if (p1 = 2)
+        {
+            if (Str4 != "")
+            {
+                SendChat(Str4)
+                sleep, 400
+            }
+            if (Str5 != "")
+            {
+                SendChat(Str5)
+                sleep, 400
+            }
+            if (Str6 != "")
+            {
+                SendChat(Str6)
+            }
+        }
+        if (p1 = 3)
+        {
+            if (Str7 != "")
+            {
+                SendChat(Str7)
+                sleep, 400
+            }
+            if (Str8 != "")
+            {
+                SendChat(Str8)
+                sleep, 400
+            }
+            if (Str9 != "")
+            {
+                SendChat(Str9)
+            }
+        }
+    }
+return
+
+Active1:
+{
+        If (healmer = 1)
+        {
+            SendChat("/do На поясе висит спец. набор.")
+            Sleep, 700
+            if (Pol = "Boy")
+            {
+                SendChat("/me достал из набора шприц")
+                Sleep, 700
+                SendChat("/do В шприце 'Адреналин'.")
+                Sleep, 700
+                SendChat("/me вколол шприц в плечо и опустил поршень")
+		Sleep, 700
+		SendChat("/healme")
+            }
+            else
+            {
+                SendChat("/me достала из набора шприц")
+                Sleep, 700
+                SendChat("/do В шприце 'Адреналин'.")
+                Sleep, 700
+                SendChat("/me вколола шприц в плечо и опустила поршень")
+		Sleep, 700
+		SendChat("/healme")
+            }
+        }
+}
+return
+Active2:
+{
+    if (TegF != "-")
+    {
+    SendInput, {F6}/f %TegF%{Space}
+    }
+    else
+    {
+    SendInput, {F6}/f{Space}
+    }
+    if (Racia = 1)
+    {
+        if (Pol = "Boy")
+        {
+            SendChat("/me сказал что-то в беcпроводную гарнитуру")
+        }
+        else
+        {
+            SendChat("/me сказала что-то в беспроводную гарнитуру")
+        }
+    }
+}
+return
+Active3:
+{
+    FormatTime, TimeString,, dd MMMM yyyy, HH:mm:ss
+    ZpTime := 60-A_Min
+    SendChat("/me посмотрел на часы, закатив руках пиджака")
+    sleep, 400
+    SendChat("/c 60")
+    sleep, 400
+    SendChat("/do На часах: " TimeString ".")
+    sleep, 600
+    if (TSTimeP = 1)
+    {
+        SendChat("/do До зарплаты: " ZpTime " мин.")
+        sleep, 600
+    }
+    else
+    {
+        SendChat("/do До зарплаты: " ZpTime " мин.")
+    }
+}
+return
+Active4:
+{
+    if (Str1 != "")
+    {
+        SendChat(Str1)
+        sleep, 400
+    }
+    if (Str2 != "")
+    {
+        SendChat(Str2)
+        sleep, 400
+    }
+    if (Str3 != "")
+    {
+        SendChat(Str3)
+    }
+}
+return
+Active5:
+{
+    if (Str4 != "")
+    {
+        SendChat(Str4)
+        sleep, 400
+    }
+    if (Str5 != "")
+    {
+        SendChat(Str5)
+        sleep, 400
+    }
+    if (Str6 != "")
+    {
+        SendChat(Str6)
+    }
+}
+return
+Active6:
+{
+    if (Str7 != "")
+    {
+        SendChat(Str7)
+        sleep, 400
+    }
+    if (Str8 != "")
+    {
+        SendChat(Str8)
+        sleep, 400
+    }
+    if (Str9 != "")
+    {
+        SendChat(Str9)
+    }
+}
+return
+Active7:
+{
+    if (Pol = "Boy")
+    {
+        if (opencar = 1)
+        {
+            SendChat("/me нажал кнопку на брелке 'JC' и закрыл машину")
+            opencar := 0
+        }
+        else
+        {
+            SendChat("/me нажал кнопку на брелке 'JC' и открыл машину")
+            opencar := 1
+        }
+    }
+    else
+    {
+        if (opencar = 1)
+        {
+            SendChat("/me нажала кнопку на брелке 'JC' и закрыла машину")
+            opencar := 0
+        }
+        else
+        {
+            SendChat("/me нажала кнопку на брелке 'JC' и открыла машину")
+            opencar := 1
+        }
+    }
+    Sleep, 700
+    SendChat("/lock 1")
+}
+return
+
+IsChatLineText(Text, Line)
+{
+    GetChatLine(Line, GetText)
+    if (inStr(GetText, Text))
+    return true
+    else
+    return false
+}
+return
+Takegun:
+if (Dostor = 1)
+{
+    TempWeapon := getPlayerWeaponId()
+    if (Pol = "Boy")
+    {
+        if ((TempWeapon = 24)  && (GunHade != 2))
+        {
+            SendChat("/me достал пистолет из кобуры")
+            GunHade:=2
+        }
+        if ((TempWeapon = 3) && (GunHade != 3))
+        {
+            SendChat("/me снял дубинку с поясного держателя")
+            GunHade:=3
+        }
+        if ((TempWeapon = 23) && (GunHade != 4))
+        {
+            SendChat("/me достал пистолет из кобуры")
+            GunHade:=4
+        }
+        if ((TempWeapon = 25)  && (GunHade != 5))
+        {
+            SendChat("/me достал Shotgun из-за спины")
+            GunHade:=5
+        }
+        if ((TempWeapon = 29)  && (GunHade != 6))
+        {
+            SendChat("/me взял MP-5 в руки")
+            GunHade:=6
+        }
+        if ((TempWeapon = 31)  && (GunHade != 7))
+        {
+            SendChat("/me взял карабин М4А1 в руки")
+            GunHade:=7
+        }
+        if ((TempWeapon = 17)  && (GunHade != 8))
+        {
+            SendChat("/me надел противогаз")
+            Sleep 2000
+            SendChat("/me достал светошумовую гранату")
+            GunHade:=8
+        }
+        if ((TempWeapon = 1)  && (GunHade != 9))
+        {
+            SendChat("/me надел кастет на руку")
+            GunHade:=9
+        }
+        if ((TempWeapon = 5)  && (GunHade != 10))
+        {
+            SendChat("/me взял биту в руку")
+            GunHade:=10
+        }
+        if ((TempWeapon = 14)  && (GunHade != 11))
+        {
+            SendChat("/me развернул букет цветов")
+            GunHade:=11
+        }
+        if ((TempWeapon = 30)  && (GunHade != 12))
+        {
+            SendChat("/me взял автомат АК-47 в руки")
+            GunHade:=12
+        }
+        if ((TempWeapon = 33)  && (GunHade != 13))
+        {
+            SendChat("/me взял винтовку в руки")
+            GunHade:=13
+        }
+        if ((TempWeapon = 34)  && (GunHade != 14))
+        {
+            SendChat("/me взял снайперскую винтовку в руки")
+            GunHade:=14
+        }
+        if ((TempWeapon = 43)  && (GunHade != 15))
+        {
+            SendChat("/me достал фотоаппарат")
+            GunHade:=15
+        }
+        if ((TempWeapon = 46)  && (GunHade != 16))
+        {
+            SendChat("/me одел парашют на плечи")
+            GunHade:=16
+        }
+        if ((TempWeapon = 15)  && (GunHade != 17))
+        {
+            SendChat("/me достал элегантную трость")
+            GunHade:=17
+        }
+        if ((TempWeapon = 8)  && (GunHade != 18))
+        {
+            SendChat("/me достал катану из-за спины")
+            GunHade:=18
+        }
+        if ((TempWeapon = 2)  && (GunHade != 19))
+        {
+            SendChat("/me достал клюшку из-за спины")
+            GunHade:=19
+        }
+    }
+    else
+    {
+        if ((TempWeapon = 24)  && (GunHade != 2))
+        {
+            SendChat("/me достала пистолет из кобуры")
+            GunHade:=2
+        }
+        if ((TempWeapon = 3) && (GunHade != 3))
+        {
+            SendChat("/me сняла дубинку с поясного держателя")
+            GunHade:=3
+        }
+        if ((TempWeapon = 23) && (GunHade != 4))
+        {
+            SendChat("/me достала пистолет из кобуры")
+            GunHade:=4
+        }
+        if ((TempWeapon = 25)  && (GunHade != 5))
+        {
+            SendChat("/me достала Shotgun из-за спины")
+            GunHade:=5
+        }
+        if ((TempWeapon = 29)  && (GunHade != 6))
+        {
+            SendChat("/me взяла MP-5 в руки")
+            GunHade:=6
+        }
+        if ((TempWeapon = 31)  && (GunHade != 7))
+        {
+            SendChat("/me взяла карабин М4А1 в руки")
+            GunHade:=7
+        }
+        if ((TempWeapon = 17)  && (GunHade != 8))
+        {
+            SendChat("/me надела противогаз")
+            Sleep 2000
+            SendChat("/me достала светошумовую гранату")
+            GunHade:=8
+        }
+        if ((TempWeapon = 1)  && (GunHade != 9))
+        {
+            SendChat("/me надела кастет на руку")
+            GunHade:=9
+        }
+        if ((TempWeapon = 5)  && (GunHade != 10))
+        {
+            SendChat("/me взяла биту в руку")
+            GunHade:=10
+        }
+        if ((TempWeapon = 14)  && (GunHade != 11))
+        {
+            SendChat("/me развернула букет цветов")
+            GunHade:=11
+        }
+        if ((TempWeapon = 30)  && (GunHade != 12))
+        {
+            SendChat("/me взяла автомат АК-47 в руки")
+            GunHade:=12
+        }
+        if ((TempWeapon = 33)  && (GunHade != 13))
+        {
+            SendChat("/me взяла винтовку в руки")
+            GunHade:=13
+        }
+        if ((TempWeapon = 34)  && (GunHade != 14))
+        {
+            SendChat("/me взяла снайперскую винтовку в руки")
+            GunHade:=14
+        }
+        if ((TempWeapon = 43)  && (GunHade != 15))
+        {
+            SendChat("/me достала фотоаппарат")
+            GunHade:=15
+        }
+        if ((TempWeapon = 46)  && (GunHade != 16))
+        {
+            SendChat("/me одела парашют на плечи")
+            GunHade:=16
+        }
+        if ((TempWeapon = 15)  && (GunHade != 17))
+        {
+            SendChat("/me достала элегантную трость")
+            GunHade:=17
+        }
+        if ((TempWeapon = 8)  && (GunHade != 18))
+        {
+            SendChat("/me достала катану из-за спины")
+            GunHade:=18
+        }
+        if ((TempWeapon = 2)  && (GunHade != 19))
+        {
+            SendChat("/me достала клюшку из-за спины")
+            GunHade:=19
+        }
+    }
+}
+else
+{
+    SetTimer, Takegun, off
+}
+return
+UnloadGun:
+if (Dostor = 1)
+{
+    TempWeapon := getPlayerWeaponId()
+    if (Pol = "Boy")
+    {
+        if ((TempWeapon != 24) && (GunHade = 2))
+        {
+            SendChat("/me убрал оружие в кобуру")
+            GunHade:=0
+        }
+        if ((TempWeapon != 3)  && (GunHade = 3))
+        {
+            SendChat("/me повесил дубинку на пояс")
+            GunHade:=0
+        }
+        if ((TempWeapon != 23)  && (GunHade = 4))
+        {
+            SendChat("/me убрал оружие в кобуру")
+            GunHade:=0
+        }
+        if ((TempWeapon != 25)  && (GunHade = 5))
+        {
+            SendChat("/me убрал Shotgun за спину")
+            GunHade:=0
+        }
+        if ((TempWeapon != 29)  && (GunHade = 6))
+        {
+            SendChat("/me повесил MP-5 на плечо")
+            GunHade:=0
+        }
+        if ((TempWeapon != 31)  && (GunHade = 7))
+        {
+            SendChat("/me убрал карабин М4А1 за спину")
+            GunHade:=0
+        }
+        if ((TempWeapon != 1)  && (GunHade = 9))
+        {
+            SendChat("/me снял кастет")
+            GunHade:=0
+        }
+        if ((TempWeapon != 5)  && (GunHade = 10))
+        {
+            SendChat("/me спрятал биту")
+            GunHade:=0
+        }
+        if ((TempWeapon != 14)  && (GunHade = 11))
+        {
+            SendChat("/do Цветы не в руках")
+            GunHade:=0
+        }
+        if ((TempWeapon != 30)  && (GunHade = 12))
+        {
+            SendChat("/me убрал АК-47 за спину")
+            GunHade:=0
+        }
+        if ((TempWeapon != 33)  && (GunHade = 13))
+        {
+            SendChat("/me убрал винтовку")
+            GunHade:=0
+        }
+        if ((TempWeapon != 34)  && (GunHade = 14))
+        {
+            SendChat("/me свернул снайперскую винтовку в чехол")
+            GunHade:=0
+        }
+        if ((TempWeapon != 43)  && (GunHade = 15))
+        {
+            SendChat("/me закрыл крышечкой объектив фотоаппарата")
+            GunHade:=0
+        }
+        if ((TempWeapon != 46)  && (GunHade = 16))
+        {
+            SendChat("/me снял парашют")
+            GunHade:=0
+        }
+        if ((TempWeapon != 8)  && (GunHade = 18))
+        {
+            SendChat("/me убрал катану за спину")
+            GunHade:=0
+        }
+        if ((TempWeapon != 2)  && (GunHade = 19))
+        {
+            SendChat("/me убрал клюшку за спину")
+            GunHade:=0
+        }
+    }
+    else
+    {
+        if ((TempWeapon != 24) && (GunHade = 2))
+        {
+            SendChat("/me убрала оружие в кобуру")
+            GunHade:=0
+        }
+        if ((TempWeapon != 3)  && (GunHade = 3))
+        {
+            SendChat("/me повесила дубинку на пояс")
+            GunHade:=0
+        }
+        if ((TempWeapon != 23)  && (GunHade = 4))
+        {
+            SendChat("/me убрала оружие в кобуру")
+            GunHade:=0
+        }
+        if ((TempWeapon != 25)  && (GunHade = 5))
+        {
+            SendChat("/me убрала Shotgun за спину")
+            GunHade:=0
+        }
+        if ((TempWeapon != 29)  && (GunHade = 6))
+        {
+            SendChat("/me повесила MP-5 на плечо")
+            GunHade:=0
+        }
+        if ((TempWeapon != 31)  && (GunHade = 7))
+        {
+            SendChat("/me убрала карабин М4А1 за спину")
+            GunHade:=0
+        }
+        if ((TempWeapon != 1)  && (GunHade = 9))
+        {
+            SendChat("/me сняла кастет")
+            GunHade:=0
+        }
+        if ((TempWeapon != 5)  && (GunHade = 10))
+        {
+            SendChat("/me спрятала биту")
+            GunHade:=0
+        }
+        if ((TempWeapon != 30)  && (GunHade = 12))
+        {
+            SendChat("/me убрала АК-47 за спину")
+            GunHade:=0
+        }
+        if ((TempWeapon != 33)  && (GunHade = 13))
+        {
+            SendChat("/me убрала винтовку")
+            GunHade:=0
+        }
+        if ((TempWeapon != 34)  && (GunHade = 14))
+        {
+            SendChat("/me свернула снайперскую винтовку в чехол")
+            GunHade:=0
+        }
+        if ((TempWeapon != 43)  && (GunHade = 15))
+        {
+            SendChat("/me закрыла крышечкой объектив фотоаппарата")
+            GunHade:=0
+        }
+        if ((TempWeapon != 46)  && (GunHade = 16))
+        {
+            SendChat("/me сняла парашют")
+            GunHade:=0
+        }
+        if ((TempWeapon != 8)  && (GunHade = 18))
+        {
+            SendChat("/me убрала катану за спину")
+            GunHade:=0
+        }
+        if ((TempWeapon != 2)  && (GunHade = 19))
+        {
+            SendChat("/me убрала клюшку за спину")
+            GunHade:=0
+        }
+    }
+}
+else
+{
+    SetTimer, UnloadGun, off
+}
+return
+Zarplatka:
+{
+    ZapTime := 60-A_Min
+    if (Zaptime = 2)
+    {
+        if (Zarpl = 1)
+        {
+            Voice := ComObjCreate("SAPI.SpVoice")
+            Voice.Speak("Зарплата через две минуты")
+        }
+    addChatMessageEx(0x0099FF, "{035ECD}[Mafia] {0099FF}Через 2 минуты ожидается зарплата! Будьте внимательны и не выходите в AFK.")
+    }
+}
+return
